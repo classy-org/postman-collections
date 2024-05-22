@@ -1,0 +1,3171 @@
+{
+	"info": {
+		"_postman_id": "8d04701a-09c5-4edb-b318-328606af6640",
+		"name": "Fetch Source Codes",
+		"description": "# Purpose\n\nThe Classy API offers extensive functionality when trying to fetch data. This collection offers a starting point to explore how the API can be used to fetch source codes related to transactions, fundraising pages, and fundraising teams.\n\n# How Do I Use This?\n\nIf you don't have experience with Postman, please take a look at their Getting Started documentation! [https://learning.postman.com/docs/getting-started/overview/](https://learning.postman.com/docs/getting-started/overview/)\n\nThis collection is meant to be a playground, allowing you to use either a Mock Server or your own Classy Account. You'll need to follow steps to get API credentials through Classy Manager: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\n## Using the Mock Server\n\nIf you either don't have Classy credentials, or would prefer to not make these calls against your account, you can leverage a Mock Server we've put together as part of this collection. The mock server bases its responses on the Examples we've provided under each request, using a mixture of hard-coded data and faked data to mimic executing requests against the API. You can use this mock server to freely try out these requests. It doesn't perform any authentication, and functions outside the context of Postman. So you can try out these calls against the mock server using cURL, or the language of your choice, to try it out! To use the mock server, ensure you are using the Classy API Mock Server environment!\n\n## Using the Classy API\n\nIf you are using your Classy Account, ensure you have your Client ID and Client Secret from Classy Manager. If you don't have these or don't know how to get them, you can find that information from this support article: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\nOnce you have these, ensure you are using the Classy API environment, and enter the Client ID and Client Secret into the 'current value' field for client_id and client_secret respectively.\n\nBefore making any of the requests to fetch source codes, you'll need to authenticate with the API. To do so, use the App Auth request under the Authentication folder. This will make a call to the API and, assuming you have working credentials, will provide a token that will be automatically saved and used for the other requests. These tokens have a limited timeframe in which they are valid, so if you start seeing errors that you have an invalid token, simply run the App Auth request again to get a new token.\n\nOnce you have this token, you should be able to make any requests in the Fetch Source Codes folder, by putting in existing IDs from records in your Classy account, and start to see the data you are looking for!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22527907",
+		"_collection_link": "https://classy-engineering.postman.co/workspace/Public-API---Examples~73fad294-6c98-4434-9e18-9a0fc1c1b7f3/collection/22527907-8d04701a-09c5-4edb-b318-328606af6640?action=share&source=collection_link&creator=22527907"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "App Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									" ",
+									"if (data.access_token) {",
+									"  tests[\"Body has token\"] = true;",
+									"  postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+									"}",
+									"else {",
+									"  tests[\"Body has token\"] = false;",
+									"}",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"",
+									"tests[\"Response time is less than 1000ms\"] = responseTime < 1000;",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+						},
+						"url": {
+							"raw": "{{baseUrl}}/oauth2/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth2",
+								"auth"
+							]
+						},
+						"description": "\n### POST /oauth2/auth\n\nThis endpoint is used to authenticate and obtain an access token.\n\n#### Request Body\n- `client_id` (string): The client ID for authentication.\n- `client_secret` (string): The client secret for authentication.\n- `grant_type` (string): The type of grant being requested.\n\n#### Response\nThe response is a JSON object with the following properties:\n- `access_token` (string): The access token obtained after successful authentication.\n- `expires_in` (number): The duration in seconds for which the access token is valid.\n- `queries_log` (array): An array of log entries for the queries made during the authentication process.\n- `token_type` (string): The type of token being returned.\n\n#### Example Response\n```json\n{\n    \"access_token\": \"\",\n    \"expires_in\": 0,\n    \"queries_log\": [],\n    \"token_type\": \"\"\n}\n```\n\n#### JSON Schema\n```json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"access_token\": {\"type\": \"string\"},\n        \"expires_in\": {\"type\": \"number\"},\n        \"queries_log\": {\"type\": \"array\"},\n        \"token_type\": {\"type\": \"string\"}\n    }\n}\n"
+					},
+					"response": [
+						{
+							"name": "App Auth",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oauth2/auth",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:23:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=61"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "64"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884631041fe16368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"{{$randomPassword}}\",\n    \"expires_in\": 7200,\n    \"queries_log\": [],\n    \"token_type\": \"bearer\"\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains any requests that authenticate your credentials with the Classy API. Ensure you run this request to get a valid token before attempting to run other requests in this collection."
+		},
+		{
+			"name": "Fetch Source Codes",
+			"item": [
+				{
+					"name": "Get Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Source tracking codes array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.source_tracking_codes).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"transactions",
+								"{{transaction_id}}"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "source_tracking_codes",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Transaction with Source Tracking Codes\n\nThis endpoint retrieves a specific transaction along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"acknowledgements_count\": 0,\n    \"adjustment_amount\": 0,\n    \"applied_fot_percent\": \"\",\n    \"billing_address1\": \"\",\n    \"billing_address2\": \"\",\n    \"billing_city\": \"\",\n    \"billing_country\": \"\",\n    \"billing_first_name\": \"\",\n    \"billing_last_name\": \"\",\n    \"billing_postal_code\": \"\",\n    \"billing_state\": \"\",\n    \"browser_info\": \"\",\n    \"campaign_id\": 0,\n    \"source_tracking_codes\": [\n        {\n            \"id\": 0,\n            \"c_src\": \"\",\n            \"c_src2\": \"\",\n            \"referrer\": \"\",\n            \"trackable_id\": 0,\n            \"trackable_type\": \"\",\n            \"event_type\": \"\",\n            \"created_at\": \"\",\n            \"updated_at\": \"\"\n        }\n    ],\n    ...\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"acknowledgements_count\": 3,\n  \"adjustment_amount\": 0.5,\n  \"applied_fot_percent\": \"50\",\n  \"billing_address1\": \"533 F Street\",\n  \"billing_address2\": \"533 F Street\",\n  \"billing_city\": \"San Diego\",\n  \"billing_country\": \"US\",\n  \"billing_first_name\": \"{{$randomFirstName}}\",\n  \"billing_last_name\": \"{{$randomLastName}}\",\n  \"billing_postal_code\": \"92101\",\n  \"billing_state\": \"CA\",\n  \"browser_info\": \"information\",\n  \"campaign_id\": {{$randomInt}},\n  \"card_expiration\": \"1017\",\n  \"card_last_four\": 1234,\n  \"card_type\": \"Visa\",\n  \"charged_at\": \"2017-01-01T12:02:01+0000\",\n  \"charged_classy_fees_amount\": 0.15,\n  \"charged_currency_code\": \"USD\",\n  \"charged_fees_amount\": 0.35,\n  \"charged_pp_fees_amount\": 0.15,\n  \"charged_total_gross_amount\": 1,\n  \"classy_fees_amount\": 0.34,\n  \"comment\": \"This is a comment\",\n  \"company_name\": \"Classy\",\n  \"context\": {\n    \"application_fee_campaign_category\": \"main_donate_button\",\n    \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n    \"commerce_confirmation_id\": \"C9UE75VB2\",\n    \"is_passport\": true,\n    \"source_campaign_id\": {{$randomInt}},\n    \"source_campaign_type\": \"peer_to_peer\",\n    \"created_by\": \"My App\"\n  },\n  \"created_at\": \"2017-01-01T12:02:01+0000\",\n  \"currency_code\": \"USD\",\n  \"designation_id\": {{$randomInt}},\n  \"donation_gross_amount\": 1.25,\n  \"donation_match_id\": {{$randomInt}},\n  \"donation_net_amount\": 1.25,\n  \"fees_amount\": 1.25,\n  \"fee_on_top\": true,\n  \"is_donor_covered_fee\": true,\n  \"frequency\": \"one-time\",\n  \"fundraising_page_id\": {{$randomInt}},\n  \"fundraising_team_id\": {{$randomInt}},\n  \"hide_amount\": false,\n  \"id\": {{$pathSegments '2'}},\n  \"in_honor_of\": \"{{$randomFullName}}\",\n  \"is_anonymous\": false,\n  \"is_gift_aid\": false,\n  \"is_reprocess\": true,\n  \"member_country\": \"US\",\n  \"member_email_address\": \"{{$randomEmail}}\",\n  \"member_id\": {{$randomInt}},\n  \"member_name\": \"{{$randomFullName}}\",\n  \"member_phone\": \"555-555-5555\",\n  \"organization_id\": {{$randomInt}},\n  \"overhead_net_amount\": 25,\n  \"parent_transaction_id\": {{$randomInt}},\n  \"payment_gateway\": \"BrainTree\",\n  \"payment_method\": \"WPP\",\n  \"payment_type\": \"Credit Card\",\n  \"payment_source\": \"WALLET\",\n  \"pp_fees_amount\": \"0.15\",\n  \"pp_reference_id\": \"12345\",\n  \"pp_transaction_id\": \"12345\",\n  \"pp_response\": \"1023\",\n  \"processor_decline_code\": \"64\",\n  \"promo_code_code\": \"PROMO\",\n  \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n  \"raw_currency_code\": \"USD\",\n  \"raw_donation_gross_amount\": 1.25,\n  \"raw_overhead_net_amount\": 0.25,\n  \"raw_total_gross_amount\": 1,\n  \"receipt_serial\": 1,\n  \"recurring_donation_plan_id\": 23847,\n  \"refunded_at\": null,\n  \"raw_initial_gross_amount\": 1.25,\n  \"initial_gross_amount\": 1.25,\n  \"raw_adjustment_amount\": 0.25,\n  \"account_number\": \"1234\",\n  \"account_type\": \"savings\",\n  \"institution\": \"ABC Bank\",\n  \"opted_into_payment_sync\": false,\n  \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2017-01-01T12:02:01+0000\",\n            \"updated_at\": \"2017-01-01T12:02:01+0000\"\n        }\n    ],\n    \"status\": \"success\",\n    \"supporter_id\": {{$randomInt}},\n    \"tax_entity_id\": null,\n    \"total_gross_amount\": 1.25,\n    \"updated_at\": \"2017-01-01T12:02:01+0000\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n    \n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Fundraising Team",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Source tracking codes array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.source_tracking_codes).to.exist.and.to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"fundraising-teams",
+								"{{fundraising_team_id}}"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "source_tracking_codes",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Fundraising Team with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising team along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{baseUrl}}/{{version}}/fundraising_teams/{{fundraising_team_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"campaign_id\": {\"type\": \"integer\"},\n        \"canonical_url\": {\"type\": \"string\"},\n        \"city\": {\"type\": \"string\"},\n        \"country\": {\"type\": \"string\"},\n        \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"cover_photo_url\": {\"type\": [\"string\", \"null\"]},\n        \"created_at\": {\"type\": \"string\"},\n        \"currency_code\": {\"type\": \"string\"},\n        \"description\": {\"type\": \"string\"},\n        \"designation_id\": {\"type\": \"integer\"},\n        \"goal\": {\"type\": \"integer\"},\n        \"id\": {\"type\": \"integer\"},\n        \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"logo_url\": {\"type\": [\"string\", \"null\"]},\n        \"name\": {\"type\": \"string\"},\n        \"organization_id\": {\"type\": \"integer\"},\n        \"parent_id\": {\"type\": [\"integer\", \"null\"]},\n        \"postal_code\": {\"type\": [\"string\", \"null\"]},\n        \"raw_currency_code\": {\"type\": \"string\"},\n        \"raw_goal\": {\"type\": \"string\"},\n        \"root_id\": {\"type\": [\"integer\", \"null\"]},\n        \"source_tracking_codes\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"c_src\": {\"type\": \"string\"},\n                    \"c_src2\": {\"type\": \"string\"},\n                    \"referrer\": {\"type\": \"string\"},\n                    \"trackable_id\": {\"type\": \"integer\"},\n                    \"trackable_type\": {\"type\": \"string\"},\n                    \"event_type\": {\"type\": \"string\"},\n                    \"created_at\": {\"type\": \"string\"},\n                    \"updated_at\": {\"type\": \"string\"}\n                }\n            }\n        },\n        \"state\": {\"type\": \"string\"},\n        \"status\": {\"type\": \"string\"},\n        \"team_lead_id\": {\"type\": \"integer\"},\n        \"team_lead_supporter_id\": {\"type\": \"integer\"},\n        \"team_policy_id\": {\"type\": \"integer\"},\n        \"thank_you_text\": {\"type\": [\"string\", \"null\"]},\n        \"updated_at\": {\"type\": \"string\"}\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-teams",
+										"{{fundraising_team_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:40:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=113"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "116"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "2"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884649f4086e6368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{baseUrl}}/team/{{$pathSegments '2'}}\",\n    \"city\": \"San Diego\",\n    \"country\": \"US\",\n    \"cover_photo_id\": null,\n    \"cover_photo_url\": null,\n    \"created_at\": \"2024-05-15T16:44:19+0000\",\n    \"currency_code\": \"USD\",\n    \"description\": \"{{$randomCatchPhrase}}\",\n    \"designation_id\": {{$randomInt}},\n    \"goal\": 1000,\n    \"id\": {{$pathSegments '2'}},\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"name\": \"{{$randomBsBuzz}}\",\n    \"organization_id\": {{$randomInt}},\n    \"parent_id\": null,\n    \"postal_code\": null,\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"1000.000\",\n    \"root_id\": null,\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:20+0000\",\n            \"updated_at\": \"2024-05-15T16:44:20+0000\"\n        }\n    ],\n    \"state\": \"CA\",\n    \"status\": \"active\",\n    \"team_lead_id\": {{$randomInt}},\n    \"team_lead_supporter_id\": {{$randomInt}},\n    \"team_policy_id\": {{$randomInt}},\n    \"thank_you_text\": null,\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-teams",
+										"{{fundraising_team_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"fundraising_team\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-teams",
+										"{{fundraising_team_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n    \n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-teams",
+										"{{fundraising_team_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Fundraising Page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Check if the response is in\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Source tracking codes array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.source_tracking_codes).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"fundraising-pages",
+								"{{fundraising_page_id}}"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "source_tracking_codes",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Fundraising Page with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising page along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"alias\": {\"type\": \"string\"},\n    \"campaign_id\": {\"type\": \"integer\"},\n    \"canonical_url\": {\"type\": \"string\"},\n    \"commitment_id\": {\"type\": [\"integer\", \"null\"]},\n    \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"created_at\": {\"type\": \"string\"},\n    \"currency_code\": {\"type\": \"string\"},\n    \"designation_id\": {\"type\": \"integer\"},\n    \"ended_at\": {\"type\": \"string\"},\n    \"fundraising_team_id\": {\"type\": \"integer\"},\n    \"goal\": {\"type\": \"integer\"},\n    \"id\": {\"type\": \"integer\"},\n    \"intro_text\": {\"type\": \"string\"},\n    \"is_tribute\": {\"type\": [\"boolean\", \"null\"]},\n    \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"logo_url\": {\"type\": [\"string\", \"null\"]},\n    \"member_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"member_id\": {\"type\": \"integer\"},\n    \"organization_id\": {\"type\": \"integer\"},\n    \"raw_currency_code\": {\"type\": \"string\"},\n    \"raw_goal\": {\"type\": \"string\"},\n    \"source_tracking_codes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\"type\": \"integer\"},\n          \"c_src\": {\"type\": \"string\"},\n          \"c_src2\": {\"type\": \"string\"},\n          \"referrer\": {\"type\": \"string\"},\n          \"trackable_id\": {\"type\": \"integer\"},\n          \"trackable_type\": {\"type\": \"string\"},\n          \"event_type\": {\"type\": \"string\"},\n          \"created_at\": {\"type\": \"string\"},\n          \"updated_at\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"started_at\": {\"type\": \"string\"},\n    \"status\": {\"type\": \"string\"},\n    \"supporter_id\": {\"type\": \"integer\"},\n    \"team_role\": {\"type\": \"string\"},\n    \"thank_you_text\": {\"type\": \"string\"},\n    \"thankyou_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"title\": {\"type\": \"string\"},\n    \"updated_at\": {\"type\": \"string\"}\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-pages",
+										"{{fundraising_page_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:59:25 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=109"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "109"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=ENdmOm6caLTMw7.Z19U7ZnVaEgd3hZSpPEqOkmZ1FtQ-1715810365-1.0.1.1-gGODFptrgH.jWshFjWcP2u7Au5mNEw.BCj3oCD1vmDSYDh8CTmS5lEAf9FJGwbKDnOWVTOux0wwreGraRJq14A; path=/; expires=Wed, 15-May-24 22:29:25 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846651cce436368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"alias\": \"{{$randomCatchPhrase}}\",\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{baseUrl}}/fundraiser/{{$pathSegments '2'}}\",\n    \"commitment_id\": null,\n    \"cover_photo_id\": null,\n    \"created_at\": \"2024-05-15T16:44:30+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": {{$randomInt}},\n    \"ended_at\": \"2024-06-04T23:00:00+0000\",\n    \"fundraising_team_id\": {{$randomInt}},\n    \"goal\": 500,\n    \"id\": {{$pathSegments '2'}},\n    \"intro_text\": \"{{$randomPhrase}}\",\n    \"is_tribute\": null,\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"member_email_text\": null,\n    \"member_id\": {{$randomInt}},\n    \"organization_id\": {{$randomInt}},\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"500.000\",\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:30+0000\",\n            \"updated_at\": \"2024-05-15T16:44:30+0000\"\n        }\n    ],\n    \"started_at\": \"2024-05-15T16:44:30+0000\",\n    \"status\": \"active\",\n    \"supporter_id\": {{$randomInt}},\n    \"team_role\": \"primary-captain\",\n    \"thank_you_text\": \"{{$randomPhrase}}\",\n    \"thankyou_email_text\": null,\n    \"title\": \"{{$randomCatchPhrase}}\",\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-pages",
+										"{{fundraising_page_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"fundraising_page\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-pages",
+										"{{fundraising_page_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n    \n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token Copy",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"fundraising-pages",
+										"{{fundraising_page_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "source_tracking_codes",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Campaign Source Tracking Codes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data array is present and contains the expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"campaigns",
+								"{{campaign_id}}",
+								"source-tracking-codes"
+							],
+							"query": [
+								{
+									"key": "fundraisingTeams",
+									"value": "true",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+								},
+								{
+									"key": "fundraisingPages",
+									"value": "true",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+								},
+								{
+									"key": "transactions",
+									"value": "true",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+								}
+							]
+						},
+						"description": "### Get Campaign Source Tracking Codes\n\nThis endpoint retrieves the source tracking codes for a specific campaign, with options to include source tracking codes for fundraising teams, fundraising pages, and transactions.\n\n#### Response\n\nThe response is a JSON object with the following schema. For the most up to date version of this, please visit [docs.classy.org](https://docs.classy.org)\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"current_page\": {\n      \"type\": \"number\"\n    },\n    \"data\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"number\"\n          },\n          \"c_src\": {\n            \"type\": \"string\"\n          },\n          \"c_src2\": {\n            \"type\": \"string\"\n          },\n          \"referrer\": {\n            \"type\": \"string\"\n          },\n          \"trackable_id\": {\n            \"type\": \"number\"\n          },\n          \"trackable_type\": {\n            \"type\": \"string\"\n          },\n          \"event_type\": {\n            \"type\": \"string\"\n          },\n          \"created_at\": {\n            \"type\": \"string\"\n          },\n          \"updated_at\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"first_page_url\": {\n      \"type\": \"string\"\n    },\n    \"from\": {\n      \"type\": \"number\"\n    },\n    \"last_page\": {\n      \"type\": \"number\"\n    },\n    \"last_page_url\": {\n      \"type\": \"string\"\n    },\n    \"links\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"url\": {\n            \"type\": [\"string\", \"null\"]\n          },\n          \"label\": {\n            \"type\": \"string\"\n          },\n          \"active\": {\n            \"type\": \"boolean\"\n          }\n        }\n      }\n    },\n    \"next_page_url\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"path\": {\n      \"type\": \"string\"\n    },\n    \"per_page\": {\n      \"type\": \"number\"\n    },\n    \"prev_page_url\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"to\": {\n      \"type\": \"number\"\n    },\n    \"total\": {\n      \"type\": \"number\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success - Transaction",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - Fundraising Team",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - Fundraising Page",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - All Options Set",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - No Options Set",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:45:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "90"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "www-authenticate",
+									"value": "Bearer realm=\"service\" error=\"invalid_token\" error_description=\"The access token is invalid or has expired\""
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-response-latency",
+									"value": "1"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a0c30e836368-ORD"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						},
+						{
+							"name": "Error - Campaign Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:46:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=17"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "19"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "2"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a2025d656368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:47:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=85"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "86"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a3ebed946368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"list_source_tracking_codes\",\n            \"entity\": \"campaign\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Organization Source Tracking Codes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response includes the Content-Type header with value application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Data array is present and contains the expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"organizations",
+								"{{organization_id}}",
+								"source-tracking-codes"
+							],
+							"query": [
+								{
+									"key": "fundraisingTeams",
+									"value": "false",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Organization"
+								},
+								{
+									"key": "fundraisingPages",
+									"value": "false",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Organization"
+								},
+								{
+									"key": "transactions",
+									"value": "false",
+									"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Organization"
+								}
+							]
+						},
+						"description": "### Get Organization Source Tracking Codes\n\nThis endpoint retrieves the source tracking codes for an organization, with options to include source tracking codes for fundraising teams, fundraising pages, and transactions.\n\n#### Response\n\nThe response is a JSON object with the following schema. For the most up to date version of this, please visit [docs.classy.org](https://docs.classy.org)\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"error\": {\n            \"type\": \"string\"\n        },\n        \"permissions\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"action\": {\n                        \"type\": \"string\"\n                    },\n                    \"entity\": {\n                        \"type\": \"string\"\n                    }\n                }\n            }\n        },\n        \"queries_log\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"query\": {\n                        \"type\": \"string\"\n                    },\n                    \"bindings\": {\n                        \"type\": \"array\",\n                        \"items\": {\n                            \"type\": \"string\"\n                        }\n                    },\n                    \"time\": {\n                        \"type\": \"number\"\n                    }\n                }\n            }\n        },\n        \"scopes\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"organization\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"number\"\n                    }\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Success - Transaction",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer •••••••"
+									}
+								],
+								"url": {
+									"raw": "https://api.classy.org/2.0/organizations//source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
+									"protocol": "https",
+									"host": [
+										"api",
+										"classy",
+										"org"
+									],
+									"path": [
+										"2.0",
+										"organizations",
+										"",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - Fundraising Team",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - Fundraising Page",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - All Options Set",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Success - No Options Set",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:45:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "90"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "www-authenticate",
+									"value": "Bearer realm=\"service\" error=\"invalid_token\" error_description=\"The access token is invalid or has expired\""
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-response-latency",
+									"value": "1"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a0c30e836368-ORD"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						},
+						{
+							"name": "Error - Organization Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:46:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=17"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "19"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "2"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a2025d656368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"source-tracking-codes"
+									],
+									"query": [
+										{
+											"key": "fundraisingTeams",
+											"value": "true",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Teams in this Campaign"
+										},
+										{
+											"key": "fundraisingPages",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Fundraising Pages in this Campaign"
+										},
+										{
+											"key": "transactions",
+											"value": "false",
+											"description": "Optional - Defaults to false; If true, fetches source codes associated to Transactions in this Campaign"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 19:47:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=85"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "86"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845a3ebed946368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"list_source_tracking_codes\",\n            \"entity\": \"organization\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains all requests that allow you to get source codes for transactions, fundraising teams, or fundraising pages. Ensure you have run an Authentication request to have a valid token before trying to run any of these!",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
