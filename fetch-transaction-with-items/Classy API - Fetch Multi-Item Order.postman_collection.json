@@ -1,0 +1,2332 @@
+{
+	"info": {
+		"_postman_id": "ac5149ae-9699-4a49-a05e-e9be3a7dbbcc",
+		"name": "Fetch Multi-Item Order",
+		"description": "# Purpose\n\nThe Classy API offers extensive functionality when trying to fetch data. This collection offers a starting point to explore how the API can be used to fetch the transaction with the items involved.\n\n# How Do I Use This?\n\nIf you don't have experience with Postman, please take a look at their Getting Started documentation! [https://learning.postman.com/docs/getting-started/overview/](https://learning.postman.com/docs/getting-started/overview/)\n\nThis collection is meant to be a playground, allowing you to use either a Mock Server or your own Classy Account. You'll need to follow steps to get API credentials through Classy Manager: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\n## Using the Mock Server\n\nIf you either don't have Classy credentials, or would prefer to not make these calls against your account, you can leverage a Mock Server we've put together as part of this collection. The mock server bases its responses on the Examples we've provided under each request, using a mixture of hard-coded data and faked data to mimic executing requests against the API. You can use this mock server to freely try out these requests. It doesn't perform any authentication, and functions outside the context of Postman. So you can try out these calls against the mock server using cURL, or the language of your choice, to try it out! To use the mock server, ensure you are using the Classy API Mock Server environment!\n\n## Using the Classy API\n\nIf you are using your Classy Account, ensure you have your Client ID and Client Secret from Classy Manager. If you don't have these or don't know how to get them, you can find that information from this support article: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\nOnce you have these, ensure you are using the Classy API environment, and enter the Client ID and Client Secret into the 'current value' field for client_id and client_secret respectively.\n\nBefore making any of the requests to fetch transaction items, you'll need to authenticate with the API. To do so, use the App Auth request under the Authentication folder. This will make a call to the API and, assuming you have working credentials, will provide a token that will be automatically saved and used for the other requests. These tokens have a limited timeframe in which they are valid, so if you start seeing errors that you have an invalid token, simply run the App Auth request again to get a new token.\n\nOnce you have this token, you should be able to make any requests in the Fetch Multi-Item Order folder, by putting in existing IDs from records in your Classy account, and start to see the data you are looking for!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "170815"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "App Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									" ",
+									"if (data.access_token) {",
+									"  tests[\"Body has token\"] = true;",
+									"  postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+									"}",
+									"else {",
+									"  tests[\"Body has token\"] = false;",
+									"}",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"",
+									"tests[\"Response time is less than 1000ms\"] = responseTime < 1000;",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+						},
+						"url": {
+							"raw": "{{baseUrl}}/oauth2/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth2",
+								"auth"
+							]
+						},
+						"description": "\n### POST /oauth2/auth\n\nThis endpoint is used to authenticate and obtain an access token.\n\n#### Request Body\n- `client_id` (string): The client ID for authentication.\n- `client_secret` (string): The client secret for authentication.\n- `grant_type` (string): The type of grant being requested.\n\n#### Response\nThe response is a JSON object with the following properties:\n- `access_token` (string): The access token obtained after successful authentication.\n- `expires_in` (number): The duration in seconds for which the access token is valid.\n- `queries_log` (array): An array of log entries for the queries made during the authentication process.\n- `token_type` (string): The type of token being returned.\n\n#### Example Response\n```json\n{\n    \"access_token\": \"\",\n    \"expires_in\": 0,\n    \"queries_log\": [],\n    \"token_type\": \"\"\n}\n```\n\n#### JSON Schema\n```json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"access_token\": {\"type\": \"string\"},\n        \"expires_in\": {\"type\": \"number\"},\n        \"queries_log\": {\"type\": \"array\"},\n        \"token_type\": {\"type\": \"string\"}\n    }\n}\n"
+					},
+					"response": [
+						{
+							"name": "App Auth",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oauth2/auth",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:23:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=61"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "64"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884631041fe16368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"{{$randomPassword}}\",\n    \"expires_in\": 7200,\n    \"queries_log\": [],\n    \"token_type\": \"bearer\"\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains any requests that authenticate your credentials with the Classy API. Ensure you run this request to get a valid token before attempting to run other requests in this collection."
+		},
+		{
+			"name": "Fetch Multi-Item Order",
+			"item": [
+				{
+					"name": "Get Transaction with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Items array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.items).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"transactions",
+								"{{transaction_id}}"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "items",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Transaction with related items\n\nThis endpoint retrieves a specific transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"acknowledgements_count\": 3,\n    \"adjustment_amount\": 0.5,\n    \"applied_fot_percent\": \"50\",\n    \"billing_address1\": \"533 F Street\",\n    \"billing_address2\": \"533 F Street\",\n    \"billing_city\": \"San Diego\",\n    \"billing_country\": \"US\",\n    \"billing_first_name\": \"{{$randomFirstName}}\",\n    \"billing_last_name\": \"{{$randomLastName}}\",\n    \"billing_postal_code\": \"92101\",\n    \"billing_state\": \"CA\",\n    \"browser_info\": \"information\",\n    \"campaign_id\": {{$randomInt}},\n    \"card_expiration\": \"1017\",\n    \"card_last_four\": 1234,\n    \"card_type\": \"Visa\",\n    \"charged_at\": \"2017-01-01T12:02:01+0000\",\n    \"charged_classy_fees_amount\": 0.15,\n    \"charged_currency_code\": \"USD\",\n    \"charged_fees_amount\": 0.35,\n    \"charged_pp_fees_amount\": 0.15,\n    \"charged_total_gross_amount\": 1,\n    \"classy_fees_amount\": 0.34,\n    \"comment\": \"This is a comment\",\n    \"company_name\": \"Classy\",\n    \"context\": {\n        \"application_fee_campaign_category\": \"main_donate_button\",\n        \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n        \"commerce_confirmation_id\": \"C9UE75VB2\",\n        \"is_passport\": true,\n        \"source_campaign_id\": {{$randomInt}},\n        \"source_campaign_type\": \"peer_to_peer\",\n        \"created_by\": \"My App\"\n    },\n    \"created_at\": \"2017-01-01T12:02:01+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": {{$randomInt}},\n    \"donation_gross_amount\": 1.25,\n    \"donation_match_id\": {{$randomInt}},\n    \"donation_net_amount\": 1.25,\n    \"fees_amount\": 1.25,\n    \"fee_on_top\": true,\n    \"is_donor_covered_fee\": true,\n    \"frequency\": \"one-time\",\n    \"fundraising_page_id\": {{$randomInt}},\n    \"fundraising_team_id\": {{$randomInt}},\n    \"hide_amount\": false,\n    \"id\": {{$pathSegments '2'}},\n    \"in_honor_of\": \"{{$randomFullName}}\",\n    \"is_anonymous\": false,\n    \"is_gift_aid\": false,\n    \"is_reprocess\": true,\n    \"member_country\": \"US\",\n    \"member_email_address\": \"{{$randomEmail}}\",\n    \"member_id\": {{$randomInt}},\n    \"member_name\": \"{{$randomFullName}}\",\n    \"member_phone\": \"555-555-5555\",\n    \"organization_id\": {{$randomInt}},\n    \"overhead_net_amount\": 25,\n    \"parent_transaction_id\": {{$randomInt}},\n    \"payment_gateway\": \"BrainTree\",\n    \"payment_method\": \"WPP\",\n    \"payment_type\": \"Credit Card\",\n    \"payment_source\": \"WALLET\",\n    \"pp_fees_amount\": \"0.15\",\n    \"pp_reference_id\": \"12345\",\n    \"pp_transaction_id\": \"12345\",\n    \"pp_response\": \"1023\",\n    \"processor_decline_code\": \"64\",\n    \"promo_code_code\": \"PROMO\",\n    \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n    \"raw_currency_code\": \"USD\",\n    \"raw_donation_gross_amount\": 1.25,\n    \"raw_overhead_net_amount\": 0.25,\n    \"raw_total_gross_amount\": 1,\n    \"receipt_serial\": 1,\n    \"recurring_donation_plan_id\": 23847,\n    \"refunded_at\": null,\n    \"raw_initial_gross_amount\": 1.25,\n    \"initial_gross_amount\": 1.25,\n    \"raw_adjustment_amount\": 0.25,\n    \"account_number\": \"1234\",\n    \"account_type\": \"savings\",\n    \"institution\": \"ABC Bank\",\n    \"opted_into_payment_sync\": false,\n    \"items\": [\n        {\n            \"final_price\": {{$randomPrice}},\n            \"fundraising_team_id\": null,\n            \"raw_overhead_amount\": null,\n            \"designation_id\": {{$randomInt}},\n            \"commerce_order_item_id\": {{$randomBsNoun}},\n            \"id\": {{$randomInt}},\n            \"transaction_id\": {{$randomInt}},\n            \"type\": \"donation\",\n            \"product_id\": null,\n            \"product_name\": {{$randomBsNoun}},\n            \"price\": 0,\n            \"fees_amount\": {{$randomPrice}},\n            \"overhead_amount\": 0,\n            \"quantity\": {{$randomInt}},\n            \"donation_net_amount\": {{$randomPrice}},\n            \"donation_gross_amount\": {{$randomPrice}},\n            \"campaign_id\": {{$randomInt}},\n            \"fundraising_page_id\": {{$randomInt}},\n            \"organization_id\": {{$randomInt}},\n            \"raw_price\": null,\n            \"raw_final_price\": {{$randomPrice}},\n            \"charged_fees_amount\": {{$randomPrice}},\n            \"charged_final_price\": {{$randomPrice}},\n            \"currency_code\": \"USD\",\n            \"promo_code_id\": null,\n            \"raw_currency_code\": \"USD\",\n            \"raw_donation_gross_amount\": {{$randomPrice}}\n        }\n    ],\n    \"status\": \"success\",\n    \"supporter_id\": {{$randomInt}},\n    \"tax_entity_id\": null,\n    \"total_gross_amount\": 1.25,\n    \"updated_at\": \"2017-01-01T12:02:01+0000\"\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"The resource cannot be found\"\n    \n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions",
+										"{{transaction_id}}"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Transactions with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Items array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    pm.expect(responseData.data[0].items).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "items",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Transactions List with related items\n\nThis endpoint retrieves a list of transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions?with=items`"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"acknowledgements_count\": 3,\n            \"adjustment_amount\": 0.5,\n            \"applied_fot_percent\": \"50\",\n            \"billing_address1\": \"533 F Street\",\n            \"billing_address2\": \"533 F Street\",\n            \"billing_city\": \"San Diego\",\n            \"billing_country\": \"US\",\n            \"billing_first_name\": \"{{$randomFirstName}}\",\n            \"billing_last_name\": \"{{$randomLastName}}\",\n            \"billing_postal_code\": \"92101\",\n            \"billing_state\": \"CA\",\n            \"browser_info\": \"information\",\n            \"campaign_id\": {{$randomInt}},\n            \"card_expiration\": \"1017\",\n            \"card_last_four\": 1234,\n            \"card_type\": \"Visa\",\n            \"charged_at\": \"2017-01-01T12:02:01+0000\",\n            \"charged_classy_fees_amount\": 0.15,\n            \"charged_currency_code\": \"USD\",\n            \"charged_fees_amount\": 0.35,\n            \"charged_pp_fees_amount\": 0.15,\n            \"charged_total_gross_amount\": 1,\n            \"classy_fees_amount\": 0.34,\n            \"comment\": \"This is a comment\",\n            \"company_name\": \"Classy\",\n            \"context\": {\n                \"application_fee_campaign_category\": \"main_donate_button\",\n                \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n                \"commerce_confirmation_id\": \"C9UE75VB2\",\n                \"is_passport\": true,\n                \"source_campaign_id\": {{$randomInt}},\n                \"source_campaign_type\": \"peer_to_peer\",\n                \"created_by\": \"My App\"\n            },\n            \"created_at\": \"2017-01-01T12:02:01+0000\",\n            \"currency_code\": \"USD\",\n            \"designation_id\": {{$randomInt}},\n            \"donation_gross_amount\": 1.25,\n            \"donation_match_id\": {{$randomInt}},\n            \"donation_net_amount\": 1.25,\n            \"fees_amount\": 1.25,\n            \"fee_on_top\": true,\n            \"is_donor_covered_fee\": true,\n            \"frequency\": \"one-time\",\n            \"fundraising_page_id\": {{$randomInt}},\n            \"fundraising_team_id\": {{$randomInt}},\n            \"hide_amount\": false,\n            \"id\": {{$pathSegments '2'}},\n            \"in_honor_of\": \"{{$randomFullName}}\",\n            \"is_anonymous\": false,\n            \"is_gift_aid\": false,\n            \"is_reprocess\": true,\n            \"member_country\": \"US\",\n            \"member_email_address\": \"{{$randomEmail}}\",\n            \"member_id\": {{$randomInt}},\n            \"member_name\": \"{{$randomFullName}}\",\n            \"member_phone\": \"555-555-5555\",\n            \"organization_id\": {{$randomInt}},\n            \"overhead_net_amount\": 25,\n            \"parent_transaction_id\": {{$randomInt}},\n            \"payment_gateway\": \"BrainTree\",\n            \"payment_method\": \"WPP\",\n            \"payment_type\": \"Credit Card\",\n            \"payment_source\": \"WALLET\",\n            \"pp_fees_amount\": \"0.15\",\n            \"pp_reference_id\": \"12345\",\n            \"pp_transaction_id\": \"12345\",\n            \"pp_response\": \"1023\",\n            \"processor_decline_code\": \"64\",\n            \"promo_code_code\": \"PROMO\",\n            \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n            \"raw_currency_code\": \"USD\",\n            \"raw_donation_gross_amount\": 1.25,\n            \"raw_overhead_net_amount\": 0.25,\n            \"raw_total_gross_amount\": 1,\n            \"receipt_serial\": 1,\n            \"recurring_donation_plan_id\": 23847,\n            \"refunded_at\": null,\n            \"raw_initial_gross_amount\": 1.25,\n            \"initial_gross_amount\": 1.25,\n            \"raw_adjustment_amount\": 0.25,\n            \"account_number\": \"1234\",\n            \"account_type\": \"savings\",\n            \"institution\": \"ABC Bank\",\n            \"opted_into_payment_sync\": false,\n            \"items\": [\n                {\n                    \"final_price\": {{$randomPrice}},\n                    \"fundraising_team_id\": null,\n                    \"raw_overhead_amount\": null,\n                    \"designation_id\": {{$randomInt}},\n                    \"commerce_order_item_id\": {{$randomBsNoun}},\n                    \"id\": {{$randomInt}},\n                    \"transaction_id\": {{$randomInt}},\n                    \"type\": \"donation\",\n                    \"product_id\": null,\n                    \"product_name\": {{$randomBsNoun}},\n                    \"price\": 0,\n                    \"fees_amount\": {{$randomPrice}},\n                    \"overhead_amount\": 0,\n                    \"quantity\": {{$randomInt}},\n                    \"donation_net_amount\": {{$randomPrice}},\n                    \"donation_gross_amount\": {{$randomPrice}},\n                    \"campaign_id\": {{$randomInt}},\n                    \"fundraising_page_id\": {{$randomInt}},\n                    \"organization_id\": {{$randomInt}},\n                    \"raw_price\": null,\n                    \"raw_final_price\": {{$randomPrice}},\n                    \"charged_fees_amount\": {{$randomPrice}},\n                    \"charged_final_price\": {{$randomPrice}},\n                    \"currency_code\": \"USD\",\n                    \"promo_code_id\": null,\n                    \"raw_currency_code\": \"USD\",\n                    \"raw_donation_gross_amount\": {{$randomPrice}}\n                }\n            ],\n            \"status\": \"success\",\n            \"supporter_id\": {{$randomInt}},\n            \"tax_entity_id\": null,\n            \"total_gross_amount\": 1.25,\n            \"updated_at\": \"2017-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{host}/transactions?with=items&page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{host}/transactions?with=items&page=1\",\n    \"next_page_url\": null,\n    \"path\": \"{host}/transactions?with=items\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"links\": [\n        {\n            \"label\": \"1\",\n            \"url\": \"{host}/{resource}?page=1\",\n            \"active\": \"true\"\n        }\n    ],\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Organization Transaction with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Items array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    pm.expect(responseData.data[0].items).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"organizations",
+								"{{organization_id}}",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "items",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Organization Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to the organization along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"acknowledgements_count\": 3,\n            \"adjustment_amount\": 0.5,\n            \"applied_fot_percent\": \"50\",\n            \"billing_address1\": \"533 F Street\",\n            \"billing_address2\": \"533 F Street\",\n            \"billing_city\": \"San Diego\",\n            \"billing_country\": \"US\",\n            \"billing_first_name\": \"{{$randomFirstName}}\",\n            \"billing_last_name\": \"{{$randomLastName}}\",\n            \"billing_postal_code\": \"92101\",\n            \"billing_state\": \"CA\",\n            \"browser_info\": \"information\",\n            \"campaign_id\": {{$randomInt}},\n            \"card_expiration\": \"1017\",\n            \"card_last_four\": 1234,\n            \"card_type\": \"Visa\",\n            \"charged_at\": \"2017-01-01T12:02:01+0000\",\n            \"charged_classy_fees_amount\": 0.15,\n            \"charged_currency_code\": \"USD\",\n            \"charged_fees_amount\": 0.35,\n            \"charged_pp_fees_amount\": 0.15,\n            \"charged_total_gross_amount\": 1,\n            \"classy_fees_amount\": 0.34,\n            \"comment\": \"This is a comment\",\n            \"company_name\": \"Classy\",\n            \"context\": {\n                \"application_fee_campaign_category\": \"main_donate_button\",\n                \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n                \"commerce_confirmation_id\": \"C9UE75VB2\",\n                \"is_passport\": true,\n                \"source_campaign_id\": {{$randomInt}},\n                \"source_campaign_type\": \"peer_to_peer\",\n                \"created_by\": \"My App\"\n            },\n            \"created_at\": \"2017-01-01T12:02:01+0000\",\n            \"currency_code\": \"USD\",\n            \"designation_id\": {{$randomInt}},\n            \"donation_gross_amount\": 1.25,\n            \"donation_match_id\": {{$randomInt}},\n            \"donation_net_amount\": 1.25,\n            \"fees_amount\": 1.25,\n            \"fee_on_top\": true,\n            \"is_donor_covered_fee\": true,\n            \"frequency\": \"one-time\",\n            \"fundraising_page_id\": {{$randomInt}},\n            \"fundraising_team_id\": {{$randomInt}},\n            \"hide_amount\": false,\n            \"id\": {{$pathSegments '2'}},\n            \"in_honor_of\": \"{{$randomFullName}}\",\n            \"is_anonymous\": false,\n            \"is_gift_aid\": false,\n            \"is_reprocess\": true,\n            \"member_country\": \"US\",\n            \"member_email_address\": \"{{$randomEmail}}\",\n            \"member_id\": {{$randomInt}},\n            \"member_name\": \"{{$randomFullName}}\",\n            \"member_phone\": \"555-555-5555\",\n            \"organization_id\": {{$randomInt}},\n            \"overhead_net_amount\": 25,\n            \"parent_transaction_id\": {{$randomInt}},\n            \"payment_gateway\": \"BrainTree\",\n            \"payment_method\": \"WPP\",\n            \"payment_type\": \"Credit Card\",\n            \"payment_source\": \"WALLET\",\n            \"pp_fees_amount\": \"0.15\",\n            \"pp_reference_id\": \"12345\",\n            \"pp_transaction_id\": \"12345\",\n            \"pp_response\": \"1023\",\n            \"processor_decline_code\": \"64\",\n            \"promo_code_code\": \"PROMO\",\n            \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n            \"raw_currency_code\": \"USD\",\n            \"raw_donation_gross_amount\": 1.25,\n            \"raw_overhead_net_amount\": 0.25,\n            \"raw_total_gross_amount\": 1,\n            \"receipt_serial\": 1,\n            \"recurring_donation_plan_id\": 23847,\n            \"refunded_at\": null,\n            \"raw_initial_gross_amount\": 1.25,\n            \"initial_gross_amount\": 1.25,\n            \"raw_adjustment_amount\": 0.25,\n            \"account_number\": \"1234\",\n            \"account_type\": \"savings\",\n            \"institution\": \"ABC Bank\",\n            \"opted_into_payment_sync\": false,\n            \"items\": [\n                {\n                    \"final_price\": {{$randomPrice}},\n                    \"fundraising_team_id\": null,\n                    \"raw_overhead_amount\": null,\n                    \"designation_id\": {{$randomInt}},\n                    \"commerce_order_item_id\": {{$randomBsNoun}},\n                    \"id\": {{$randomInt}},\n                    \"transaction_id\": {{$randomInt}},\n                    \"type\": \"donation\",\n                    \"product_id\": null,\n                    \"product_name\": {{$randomBsNoun}},\n                    \"price\": 0,\n                    \"fees_amount\": {{$randomPrice}},\n                    \"overhead_amount\": 0,\n                    \"quantity\": {{$randomInt}},\n                    \"donation_net_amount\": {{$randomPrice}},\n                    \"donation_gross_amount\": {{$randomPrice}},\n                    \"campaign_id\": {{$randomInt}},\n                    \"fundraising_page_id\": {{$randomInt}},\n                    \"organization_id\": {{$randomInt}},\n                    \"raw_price\": null,\n                    \"raw_final_price\": {{$randomPrice}},\n                    \"charged_fees_amount\": {{$randomPrice}},\n                    \"charged_final_price\": {{$randomPrice}},\n                    \"currency_code\": \"USD\",\n                    \"promo_code_id\": null,\n                    \"raw_currency_code\": \"USD\",\n                    \"raw_donation_gross_amount\": {{$randomPrice}}\n                }\n            ],\n            \"status\": \"success\",\n            \"supporter_id\": {{$randomInt}},\n            \"tax_entity_id\": null,\n            \"total_gross_amount\": 1.25,\n            \"updated_at\": \"2017-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{host}/organizations/{organization_id}/transactions?with=items&page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{host}/organizations/{organization_id}/transactions?with=items&page=1\",\n    \"next_page_url\": null,\n    \"path\": \"{host}/organizations/{organization_id}/transactions?with=items\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"links\": [\n        {\n            \"label\": \"1\",\n            \"url\": \"{host}/{resource}?page=1\",\n            \"active\": \"true\"\n        }\n    ],\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"organizations",
+										"{{organization_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Campaign Transactions with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Items array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    pm.expect(responseData.data[0].items).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"campaigns",
+								"{{campaign_id}}",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "items",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Campaign Transaction with related items\n\nThis endpoint retrieves a list of transactions belonging to a campaign along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"acknowledgements_count\": 3,\n            \"adjustment_amount\": 0.5,\n            \"applied_fot_percent\": \"50\",\n            \"billing_address1\": \"533 F Street\",\n            \"billing_address2\": \"533 F Street\",\n            \"billing_city\": \"San Diego\",\n            \"billing_country\": \"US\",\n            \"billing_first_name\": \"{{$randomFirstName}}\",\n            \"billing_last_name\": \"{{$randomLastName}}\",\n            \"billing_postal_code\": \"92101\",\n            \"billing_state\": \"CA\",\n            \"browser_info\": \"information\",\n            \"campaign_id\": {{$randomInt}},\n            \"card_expiration\": \"1017\",\n            \"card_last_four\": 1234,\n            \"card_type\": \"Visa\",\n            \"charged_at\": \"2017-01-01T12:02:01+0000\",\n            \"charged_classy_fees_amount\": 0.15,\n            \"charged_currency_code\": \"USD\",\n            \"charged_fees_amount\": 0.35,\n            \"charged_pp_fees_amount\": 0.15,\n            \"charged_total_gross_amount\": 1,\n            \"classy_fees_amount\": 0.34,\n            \"comment\": \"This is a comment\",\n            \"company_name\": \"Classy\",\n            \"context\": {\n                \"application_fee_campaign_category\": \"main_donate_button\",\n                \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n                \"commerce_confirmation_id\": \"C9UE75VB2\",\n                \"is_passport\": true,\n                \"source_campaign_id\": {{$randomInt}},\n                \"source_campaign_type\": \"peer_to_peer\",\n                \"created_by\": \"My App\"\n            },\n            \"created_at\": \"2017-01-01T12:02:01+0000\",\n            \"currency_code\": \"USD\",\n            \"designation_id\": {{$randomInt}},\n            \"donation_gross_amount\": 1.25,\n            \"donation_match_id\": {{$randomInt}},\n            \"donation_net_amount\": 1.25,\n            \"fees_amount\": 1.25,\n            \"fee_on_top\": true,\n            \"is_donor_covered_fee\": true,\n            \"frequency\": \"one-time\",\n            \"fundraising_page_id\": {{$randomInt}},\n            \"fundraising_team_id\": {{$randomInt}},\n            \"hide_amount\": false,\n            \"id\": {{$pathSegments '2'}},\n            \"in_honor_of\": \"{{$randomFullName}}\",\n            \"is_anonymous\": false,\n            \"is_gift_aid\": false,\n            \"is_reprocess\": true,\n            \"member_country\": \"US\",\n            \"member_email_address\": \"{{$randomEmail}}\",\n            \"member_id\": {{$randomInt}},\n            \"member_name\": \"{{$randomFullName}}\",\n            \"member_phone\": \"555-555-5555\",\n            \"organization_id\": {{$randomInt}},\n            \"overhead_net_amount\": 25,\n            \"parent_transaction_id\": {{$randomInt}},\n            \"payment_gateway\": \"BrainTree\",\n            \"payment_method\": \"WPP\",\n            \"payment_type\": \"Credit Card\",\n            \"payment_source\": \"WALLET\",\n            \"pp_fees_amount\": \"0.15\",\n            \"pp_reference_id\": \"12345\",\n            \"pp_transaction_id\": \"12345\",\n            \"pp_response\": \"1023\",\n            \"processor_decline_code\": \"64\",\n            \"promo_code_code\": \"PROMO\",\n            \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n            \"raw_currency_code\": \"USD\",\n            \"raw_donation_gross_amount\": 1.25,\n            \"raw_overhead_net_amount\": 0.25,\n            \"raw_total_gross_amount\": 1,\n            \"receipt_serial\": 1,\n            \"recurring_donation_plan_id\": 23847,\n            \"refunded_at\": null,\n            \"raw_initial_gross_amount\": 1.25,\n            \"initial_gross_amount\": 1.25,\n            \"raw_adjustment_amount\": 0.25,\n            \"account_number\": \"1234\",\n            \"account_type\": \"savings\",\n            \"institution\": \"ABC Bank\",\n            \"opted_into_payment_sync\": false,\n            \"items\": [\n                {\n                    \"final_price\": {{$randomPrice}},\n                    \"fundraising_team_id\": null,\n                    \"raw_overhead_amount\": null,\n                    \"designation_id\": {{$randomInt}},\n                    \"commerce_order_item_id\": {{$randomBsNoun}},\n                    \"id\": {{$randomInt}},\n                    \"transaction_id\": {{$randomInt}},\n                    \"type\": \"donation\",\n                    \"product_id\": null,\n                    \"product_name\": {{$randomBsNoun}},\n                    \"price\": 0,\n                    \"fees_amount\": {{$randomPrice}},\n                    \"overhead_amount\": 0,\n                    \"quantity\": {{$randomInt}},\n                    \"donation_net_amount\": {{$randomPrice}},\n                    \"donation_gross_amount\": {{$randomPrice}},\n                    \"campaign_id\": {{$randomInt}},\n                    \"fundraising_page_id\": {{$randomInt}},\n                    \"organization_id\": {{$randomInt}},\n                    \"raw_price\": null,\n                    \"raw_final_price\": {{$randomPrice}},\n                    \"charged_fees_amount\": {{$randomPrice}},\n                    \"charged_final_price\": {{$randomPrice}},\n                    \"currency_code\": \"USD\",\n                    \"promo_code_id\": null,\n                    \"raw_currency_code\": \"USD\",\n                    \"raw_donation_gross_amount\": {{$randomPrice}}\n                }\n            ],\n            \"status\": \"success\",\n            \"supporter_id\": {{$randomInt}},\n            \"tax_entity_id\": null,\n            \"total_gross_amount\": 1.25,\n            \"updated_at\": \"2017-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{host}/campaigns/{campaign_id}/transactions?with=items&page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{host}/campaigns/{campaign_id}/transactions?with=items&page=1\",\n    \"next_page_url\": null,\n    \"path\": \"{host}/campaigns/{campaign_id}/transactions?with=items\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"links\": [\n        {\n            \"label\": \"1\",\n            \"url\": \"{host}/{resource}?page=1\",\n            \"active\": \"true\"\n        }\n    ],\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Recurring Donation Plan Transactions with Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Items array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    pm.expect(responseData.data[0].items).to.exist.and.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{version}}",
+								"recurring-donation-plans",
+								"{{recurring_donation_plan_id}}",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "with",
+									"value": "items",
+									"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+								}
+							]
+						},
+						"description": "### Get Recurring Donation Plan Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to a recurring donation plan along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"recurring-donation-plans",
+										"{{recurring_donation_plan_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=128"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "135"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=rWe9uL16ZZ96ztU_D0.fQZ_bRn76nTem_lgv4sBg6uE-1715805669-1.0.1.1-331Y23OwF.IiaryvnBxyEjhZDwwR_LIJXEZ6bGiEhx5fG30VEyQqMLf..znVGI1qq9ok4InsHmmWi9Dn7tJQpw; path=/; expires=Wed, 15-May-24 21:11:09 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8845f2764e856368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"acknowledgements_count\": 3,\n            \"adjustment_amount\": 0.5,\n            \"applied_fot_percent\": \"50\",\n            \"billing_address1\": \"533 F Street\",\n            \"billing_address2\": \"533 F Street\",\n            \"billing_city\": \"San Diego\",\n            \"billing_country\": \"US\",\n            \"billing_first_name\": \"{{$randomFirstName}}\",\n            \"billing_last_name\": \"{{$randomLastName}}\",\n            \"billing_postal_code\": \"92101\",\n            \"billing_state\": \"CA\",\n            \"browser_info\": \"information\",\n            \"campaign_id\": {{$randomInt}},\n            \"card_expiration\": \"1017\",\n            \"card_last_four\": 1234,\n            \"card_type\": \"Visa\",\n            \"charged_at\": \"2017-01-01T12:02:01+0000\",\n            \"charged_classy_fees_amount\": 0.15,\n            \"charged_currency_code\": \"USD\",\n            \"charged_fees_amount\": 0.35,\n            \"charged_pp_fees_amount\": 0.15,\n            \"charged_total_gross_amount\": 1,\n            \"classy_fees_amount\": 0.34,\n            \"comment\": \"This is a comment\",\n            \"company_name\": \"Classy\",\n            \"context\": {\n                \"application_fee_campaign_category\": \"main_donate_button\",\n                \"commerce_order_id\": \"or_01HFSN0GJZ6656RM8602Z37DY1\",\n                \"commerce_confirmation_id\": \"C9UE75VB2\",\n                \"is_passport\": true,\n                \"source_campaign_id\": {{$randomInt}},\n                \"source_campaign_type\": \"peer_to_peer\",\n                \"created_by\": \"My App\"\n            },\n            \"created_at\": \"2017-01-01T12:02:01+0000\",\n            \"currency_code\": \"USD\",\n            \"designation_id\": {{$randomInt}},\n            \"donation_gross_amount\": 1.25,\n            \"donation_match_id\": {{$randomInt}},\n            \"donation_net_amount\": 1.25,\n            \"fees_amount\": 1.25,\n            \"fee_on_top\": true,\n            \"is_donor_covered_fee\": true,\n            \"frequency\": \"one-time\",\n            \"fundraising_page_id\": {{$randomInt}},\n            \"fundraising_team_id\": {{$randomInt}},\n            \"hide_amount\": false,\n            \"id\": {{$pathSegments '2'}},\n            \"in_honor_of\": \"{{$randomFullName}}\",\n            \"is_anonymous\": false,\n            \"is_gift_aid\": false,\n            \"is_reprocess\": true,\n            \"member_country\": \"US\",\n            \"member_email_address\": \"{{$randomEmail}}\",\n            \"member_id\": {{$randomInt}},\n            \"member_name\": \"{{$randomFullName}}\",\n            \"member_phone\": \"555-555-5555\",\n            \"organization_id\": {{$randomInt}},\n            \"overhead_net_amount\": 25,\n            \"parent_transaction_id\": {{$randomInt}},\n            \"payment_gateway\": \"BrainTree\",\n            \"payment_method\": \"WPP\",\n            \"payment_type\": \"Credit Card\",\n            \"payment_source\": \"WALLET\",\n            \"pp_fees_amount\": \"0.15\",\n            \"pp_reference_id\": \"12345\",\n            \"pp_transaction_id\": \"12345\",\n            \"pp_response\": \"1023\",\n            \"processor_decline_code\": \"64\",\n            \"promo_code_code\": \"PROMO\",\n            \"purchased_at\": \"2017-01-01T12:02:01+0000\",\n            \"raw_currency_code\": \"USD\",\n            \"raw_donation_gross_amount\": 1.25,\n            \"raw_overhead_net_amount\": 0.25,\n            \"raw_total_gross_amount\": 1,\n            \"receipt_serial\": 1,\n            \"recurring_donation_plan_id\": 23847,\n            \"refunded_at\": null,\n            \"raw_initial_gross_amount\": 1.25,\n            \"initial_gross_amount\": 1.25,\n            \"raw_adjustment_amount\": 0.25,\n            \"account_number\": \"1234\",\n            \"account_type\": \"savings\",\n            \"institution\": \"ABC Bank\",\n            \"opted_into_payment_sync\": false,\n            \"items\": [\n                {\n                    \"final_price\": {{$randomPrice}},\n                    \"fundraising_team_id\": null,\n                    \"raw_overhead_amount\": null,\n                    \"designation_id\": {{$randomInt}},\n                    \"commerce_order_item_id\": {{$randomBsNoun}},\n                    \"id\": {{$randomInt}},\n                    \"transaction_id\": {{$randomInt}},\n                    \"type\": \"donation\",\n                    \"product_id\": null,\n                    \"product_name\": {{$randomBsNoun}},\n                    \"price\": 0,\n                    \"fees_amount\": {{$randomPrice}},\n                    \"overhead_amount\": 0,\n                    \"quantity\": {{$randomInt}},\n                    \"donation_net_amount\": {{$randomPrice}},\n                    \"donation_gross_amount\": {{$randomPrice}},\n                    \"campaign_id\": {{$randomInt}},\n                    \"fundraising_page_id\": {{$randomInt}},\n                    \"organization_id\": {{$randomInt}},\n                    \"raw_price\": null,\n                    \"raw_final_price\": {{$randomPrice}},\n                    \"charged_fees_amount\": {{$randomPrice}},\n                    \"charged_final_price\": {{$randomPrice}},\n                    \"currency_code\": \"USD\",\n                    \"promo_code_id\": null,\n                    \"raw_currency_code\": \"USD\",\n                    \"raw_donation_gross_amount\": {{$randomPrice}}\n                }\n            ],\n            \"status\": \"success\",\n            \"supporter_id\": {{$randomInt}},\n            \"tax_entity_id\": null,\n            \"total_gross_amount\": 1.25,\n            \"updated_at\": \"2017-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{host}/recurring-donation-plans/{recurring_donation_plan_id}/transactions?with=items&page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{host}/recurring-donation-plans/{recurring_donation_plan_id}/transactions?with=items&page=1\",\n    \"next_page_url\": null,\n    \"path\": \"{host}/recurring-donation-plans/{recurring_donation_plan_id}/transactions?with=items\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"links\": [\n        {\n            \"label\": \"1\",\n            \"url\": \"{host}/{resource}?page=1\",\n            \"active\": \"true\"\n        }\n    ],\n    \"to\": 1,\n    \"total\": 1\n}"
+						},
+						{
+							"name": "Error - Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"recurring-donation-plans",
+										"{{recurring_donation_plan_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:13:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=101"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "102"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "1"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=eVPG0dR4NYlwBnf6tSFU81yV3mjATz4CHMCrkoub8h8-1715807634-1.0.1.1-LThauFuKCxMr0XpL6D0MHrzewR4G3U9XGGxG1XqSyOVfAVvsYA2IHa.ebAAf34SrGiZnc1.EU3wwlff5GEOUPw; path=/; expires=Wed, 15-May-24 21:43:54 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884622708d576368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"fetch\",\n            \"entity\": \"transaction\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Error - Invalid or Expired Token",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"{{version}}",
+										"recurring-donation-plans",
+										"{{recurring_donation_plan_id}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "with",
+											"value": "items",
+											"description": "Optional; This parameter defines associated data that we can retrieve when fetching this entity. Review our API documentation for a list on supported values for this and other endpoints"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:15:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=32"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "https://staging-app.classy-test.org"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "33"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8846254bcac06368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"invalid_token\",\n    \"error_description\": \"The access token is invalid or has expired\"\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains all requests that allow you to get transactions with associated items. Ensure you have run an Authentication request to have a valid token before trying to run any of these!",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
