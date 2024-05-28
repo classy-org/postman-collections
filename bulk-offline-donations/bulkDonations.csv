@@ -1,0 +1,11 @@
+campaign_id,billing_address1,billing_address2,billing_city,billing_country,billing_first_name,billing_last_name,billing_postal_code,billing_state,items_product_name,items_quantity,items_raw_final_price,items_type,member_email_address,member_name,member_phone,offline_payment_info_payment_type,status
+529086,"555 Test Rd",, "Madison", "US", "Jake", "Lastname", 53706, "WI","some donation",1,45.50,"donation","jake@example.com","Jake Lastname",,"cash","success"
+525925,"123 Other Ln", "Unit 4", "Madison", "US", "Bobb", "Trimble", 53706, "WI","other donation",1,45.50,"donation","bt@example.com","Bobb Trimble",,"cash","success"
+526165,"15032 Mitsue Lodge", "Suite 900", "South Pablo", "US", "Roslyn", "Cronin", 65019, "CO","another donation",1,45.50,"donation","rc@example.com","Roslyn Cronin",,"cash","success"
+529086,"693 Ottilie Highway", "Api. 983", "Trantowborough", "US", "Kian", "Sawayn", 19660, "DC","different donation",1,45.50,"donation","ks@example.com","Kian Sawayn",,"pledge","success"
+529086,"16329 Moen Porty",, "Wolfburgh", "US", "German", "Legros", 21850, "AL","other donation",1,45.50,"donation","gl@example.com","German Legros",,"other","success"
+526362,"13389 Conner Highway", "Apt 193", "Michaleport", "US", "Llewellyn", "O'Kon", 64765, "WY","not a donation",1,45.50,"custom_product","lo@example.com","Llewellyn O'Kon",,"other","success"
+526362,"1568 Weissnat Trail", "Apt 664", "Russellside", "US", "Muhammad", "Wyman", 04020, "SD","unrelated donation",1,45.50,"donation","mw@example.com","Muhammad Wyman",,"corporate_match","success"
+525925,"42443 Armstrong Estates",, "Nicoletteport", "US", "Jerod", "Stoltenberg", 17499, "PA","registration",1,45.50,"registration","js@example.com","Jerod Stoltenberg",,"cc","success"
+525925,"73316 Katlyn Plaza", "Suite 316", "South Dillonport", "US", "Hilma", "Boehm", 14316, "MA","auctioned stuff",1,45.50,"auction","hb@example.com","Hilma Boehm",,"check","success"
+529086,"754 Antonia Spring",, "East Lulabury", "US", "Jany", "Beer", 98861, "KY","good good",1,45.50,"good","jb@example.com","Jany Beer",,"cash","success"

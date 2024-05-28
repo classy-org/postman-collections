@@ -1,0 +1,714 @@
+{
+	"info": {
+		"_postman_id": "0e9ec365-495a-4883-a174-180f6e447083",
+		"name": "Bulk Offline Donations",
+		"description": "# Purpose\n\nThis collection showcases two strategies for using a Postman runner in order to sync offline donations onto the Classy platform\n\n# How Do I Use This?\n\nIf you don't have experience with Postman, please take a look at their Getting Started documentation! [https://learning.postman.com/docs/getting-started/overview/](https://learning.postman.com/docs/getting-started/overview/)\n\nThis collection is meant to be a playground, allowing you to use either a Mock Server or your own Classy Account. You'll need to follow steps to get API credentials through Classy Manager: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\n## Using the Mock Server\n\nIf you either don't have Classy credentials, or would prefer to not make these calls against your account, you can leverage a Mock Server we've put together as part of this collection. The mock server bases its responses on the Examples we've provided under each request, using a mixture of hard-coded data and faked data to mimic executing requests against the API. You can use this mock server to freely try out these requests. It doesn't perform any authentication, and functions outside the context of Postman. So you can try out these calls against the mock server using cURL, or the language of your choice, to try it out! To use the mock server, ensure you are using the Classy API Mock Server environment!\n\n## Using the Classy API\n\nIf you are using your Classy Account, ensure you have your Client ID and Client Secret from Classy Manager. If you don't have these or don't know how to get them, you can find that information from this support article: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\nOnce you have these, ensure you are using the Classy API environment, and enter the Client ID and Client Secret into the 'current value' field for client_id and client_secret respectively.\n\nBefore making any of the requests to fetch source codes, you'll need to authenticate with the API. To do so, use the App Auth request under the Authentication folder. This will make a call to the API and, assuming you have working credentials, will provide a token that will be automatically saved and used for the other requests. These tokens have a limited timeframe in which they are valid, so if you start seeing errors that you have an invalid token, simply run the App Auth request again to get a new token.\n\nOnce you have this token, you should be ready to start sending requests to the Classy API and syncing offline donations into your campaigns.\n\n**NOTE: Running these requests to add offline donations will permanently add transaction data to your organization and campaigns. Organizations using this collection as well as the Classy API generally are solely responsible for managing imported data and ensuring data accuracy. Classy recommends that you exercise caution when utilizing this collection and ensure that you truly mean to add offline donations before proceeding.**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17301108",
+		"_collection_link": "https://classy-engineering.postman.co/workspace/Public-API---Examples~73fad294-6c98-4434-9e18-9a0fc1c1b7f3/collection/17301108-0e9ec365-495a-4883-a174-180f6e447083?action=share&source=collection_link&creator=17301108"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "App Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									" ",
+									"if (data.access_token) {",
+									"  tests[\"Body has token\"] = true;",
+									"  postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+									"}",
+									"else {",
+									"  tests[\"Body has token\"] = false;",
+									"}",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"",
+									"tests[\"Response time is less than 1000ms\"] = responseTime < 1000;",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+						},
+						"url": {
+							"raw": "{{url}}/oauth2/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth2",
+								"auth"
+							]
+						},
+						"description": "\n### POST /oauth2/auth\n\nThis endpoint is used to authenticate and obtain an access token.\n\n#### Request Body\n- `client_id` (string): The client ID for authentication.\n- `client_secret` (string): The client secret for authentication.\n- `grant_type` (string): The type of grant being requested.\n\n#### Response\nThe response is a JSON object with the following properties:\n- `access_token` (string): The access token obtained after successful authentication.\n- `expires_in` (number): The duration in seconds for which the access token is valid.\n- `queries_log` (array): An array of log entries for the queries made during the authentication process.\n- `token_type` (string): The type of token being returned.\n\n#### Example Response\n```json\n{\n    \"access_token\": \"\",\n    \"expires_in\": 0,\n    \"queries_log\": [],\n    \"token_type\": \"\"\n}\n```\n\n#### JSON Schema\n```json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"access_token\": {\"type\": \"string\"},\n        \"expires_in\": {\"type\": \"number\"},\n        \"queries_log\": {\"type\": \"array\"},\n        \"token_type\": {\"type\": \"string\"}\n    }\n}\n"
+					},
+					"response": [
+						{
+							"name": "App Auth",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+								},
+								"url": {
+									"raw": "{{url}}/oauth2/auth",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 21 May 2024 16:11:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=55"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "57"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=IKwcwBcVJu.4BdadjARd0htiZHhb5dPjWe1JhYwap_k-1716307916-1.0.1.1-SFgSjHghMpmtldodVoTMs10Z5tcYSUTYSpNgw.hDuq6x6t_PONcb34pY3mXeI5qigrLDLyJKVmxtmM6JXzBYgQ; path=/; expires=Tue, 21-May-24 16:41:56 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8875d85b9ff5acb2-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"{{$randomPassword}}\",\n    \"expires_in\": 7200,\n    \"queries_log\": [],\n    \"token_type\": \"bearer\"\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains any requests that authenticate your credentials with the Classy API. Ensure you run this request to get a valid token before attempting to run other requests in this collection."
+		},
+		{
+			"name": "Post Donations",
+			"item": [
+				{
+					"name": "Offline Transaction CSV",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"billing_address1\": \"{{billing_address1}}\",\n   \"billing_address2\": \"{{billing_address2}}\",\n   \"billing_city\": \"{{billing_city}}\",\n   \"billing_country\": \"{{billing_country}}\",\n   \"billing_first_name\": \"{{billing_first_name}}\",\n   \"billing_last_name\": \"{{billing_last_name}}\",\n   \"billing_postal_code\": \"{{billing_postal_code}}\",\n   \"billing_state\": \"{{billing_state}}\",\n   \"items\": [\n        {\n            \"product_name\": \"{{items_product_name}}\",\n            \"quantity\": {{items_quantity}},\n            \"raw_final_price\": {{items_raw_final_price}},\n            \"type\": \"{{items_type}}\"\n        }\n   ],\n   \"member_email_address\": \"{{member_email_address}}\",\n   \"member_name\": \"{{member_name}}\",\n   \"member_phone\": \"{{member_phone}}\",\n   \"offline_payment_info\": {\n        \"payment_type\": \"{{offline_payment_info_payment_type}}\"\n   },\n   \"status\": \"{{status}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{version}}",
+								"campaigns",
+								"{{campaign_id}}",
+								"transactions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Offline Transaction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"billing_address1\": \"{{billing_address1}}\",\n    \"billing_address2\": \"{{billing_address2}}\",\n    \"billing_city\": \"{{billing_city}}\",\n    \"billing_country\": \"{{billing_country}}\",\n    \"billing_first_name\": \"{{billing_first_name}}\",\n    \"billing_last_name\": \"{{billing_last_name}}\",\n    \"billing_postal_code\": \"{{billing_postal_code}}\",\n    \"billing_state\": \"{{billing_state}}\",\n    \"items\": [\n        {\n            \"product_name\": \"{{items_product_name}}\",\n            \"quantity\": {{items_quantity}},\n            \"raw_final_price\": {{items_raw_final_price}},\n            \"type\": \"{{items_type}}\"\n        }\n    ],\n    \"member_email_address\": \"{{member_email_address}}\",\n    \"member_name\": \"{{member_name}}\",\n    \"member_phone\": \"{{member_phone}}\",\n    \"offline_payment_info\": {\n        \"payment_type\": \"{{offline_payment_info_payment_type}}\"\n    },\n    \"status\": \"{{status}}\"\n}\n    \n ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 21 May 2024 16:11:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=55"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "57"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=IKwcwBcVJu.4BdadjARd0htiZHhb5dPjWe1JhYwap_k-1716307916-1.0.1.1-SFgSjHghMpmtldodVoTMs10Z5tcYSUTYSpNgw.hDuq6x6t_PONcb34pY3mXeI5qigrLDLyJKVmxtmM6JXzBYgQ; path=/; expires=Tue, 21-May-24 16:41:56 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8875d85b9ff5acb2-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account_number\": null,\n    \"account_type\": null,\n    \"acknowledgements_count\": 0,\n    \"adjustment_amount\": null,\n    \"application_fee_amount\": null,\n    \"applied_application_fee_percent\": null,\n    \"applied_flex_rate_percent\": null,\n    \"applied_fot_percent\": null,\n    \"applied_processor_fee_percent\": null,\n    \"applied_raw_processor_fee_flat\": null,\n    \"billing_address1\": \"{{$randomStreetAddress}}\",\n    \"billing_address2\": \"\",\n    \"billing_city\": \"{{$randomCity}}\",\n    \"billing_country\": \"US\",\n    \"billing_first_name\": \"{{$randomFirstName}}\",\n    \"billing_last_name\": \"{{$randomLastName}}\",\n    \"billing_postal_code\": \"53706\",\n    \"billing_state\": \"WI\",\n    \"browser_info\": null,\n    \"campaign_id\": 529086,\n    \"card_expiration\": null,\n    \"card_last_four\": null,\n    \"card_type\": null,\n    \"charged_at\": null,\n    \"charged_classy_fees_amount\": null,\n    \"charged_currency_code\": null,\n    \"charged_fees_amount\": null,\n    \"charged_pp_fees_amount\": null,\n    \"charged_total_gross_amount\": null,\n    \"classy_fees_amount\": 0,\n    \"comment\": null,\n    \"company_name\": null,\n    \"context\": {\n        \"is_passport\": false,\n        \"source_campaign_id\": 529086,\n        \"source_campaign_type\": \"peer_to_peer\",\n        \"application_fee_campaign_category\": null,\n        \"commerce_order_id\": null,\n        \"commerce_confirmation_id\": null,\n        \"created_by\": \"Demo Api App\"\n    },\n    \"created_at\": \"2024-05-22T00:00:00+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": 221255,\n    \"donation_gross_amount\": 45.5,\n    \"donation_net_amount\": 45.5,\n    \"fee_on_top\": false,\n    \"fees_amount\": 0,\n    \"flex_rate_amount\": null,\n    \"frequency\": \"one-time\",\n    \"fundraising_page_id\": null,\n    \"fundraising_team_id\": null,\n    \"hide_amount\": false,\n    \"id\": 8039731,\n    \"in_honor_of\": null,\n    \"initial_gross_amount\": 42.2,\n    \"institution\": null,\n    \"is_anonymous\": false,\n    \"is_donor_covered_fee\": false,\n    \"is_gift_aid\": false,\n    \"is_reprocess\": null,\n    \"member_country\": null,\n    \"member_email_address\": \"agh8dka@j8ghjkl.com\",\n    \"member_id\": 4617273,\n    \"member_name\": \"Jake Lastname\",\n    \"member_phone\": \"14567891234\",\n    \"metadata\": null,\n    \"opted_into_payment_sync\": false,\n    \"organization_id\": 56756,\n    \"overhead_net_amount\": 0,\n    \"parent_transaction_id\": null,\n    \"payment_gateway\": null,\n    \"payment_method\": \"Offline\",\n    \"payment_source\": null,\n    \"payment_type\": null,\n    \"pp_fees_amount\": 0,\n    \"pp_reference_id\": null,\n    \"pp_response\": null,\n    \"pp_transaction_id\": null,\n    \"processor_decline_code\": null,\n    \"processor_fee_amount\": null,\n    \"promo_code_code\": null,\n    \"purchased_at\": \"2024-05-22T18:57:01+0000\",\n    \"raw_adjustment_amount\": 0,\n    \"raw_application_fee_amount\": null,\n    \"raw_currency_code\": \"USD\",\n    \"raw_donation_gross_amount\": 42.2,\n    \"raw_flex_rate_amount\": null,\n    \"raw_initial_gross_amount\": 42.2,\n    \"raw_overhead_net_amount\": 0,\n    \"raw_processor_fee_amount\": null,\n    \"raw_total_gross_amount\": 42.2,\n    \"recurring_donation_plan_id\": null,\n    \"refunded_at\": null,\n    \"reprocess_attempts\": 0,\n    \"status\": \"success\",\n    \"supporter_id\": 4106879,\n    \"tax_entity_id\": null,\n    \"total_gross_amount\": 42.2,\n    \"updated_at\": \"2024-05-22T18:57:01+0000\"\n}"
+						},
+						{
+							"name": "Offline Transaction Forbidden",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{request_body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 21 May 2024 16:11:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=55"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "57"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=IKwcwBcVJu.4BdadjARd0htiZHhb5dPjWe1JhYwap_k-1716307916-1.0.1.1-SFgSjHghMpmtldodVoTMs10Z5tcYSUTYSpNgw.hDuq6x6t_PONcb34pY3mXeI5qigrLDLyJKVmxtmM6JXzBYgQ; path=/; expires=Tue, 21-May-24 16:41:56 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8875d85b9ff5acb2-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"create_transaction_offline\",\n            \"entity\": \"campaign\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Offline Transaction JSON",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(`requestBody`, JSON.stringify(pm.iterationData.toObject()))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{requestBody}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"{{version}}",
+								"campaigns",
+								"{{campaign_id}}",
+								"transactions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Offline Transaction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{requestBody}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"{{campaign_id}}",
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 21 May 2024 16:11:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=55"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "57"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=IKwcwBcVJu.4BdadjARd0htiZHhb5dPjWe1JhYwap_k-1716307916-1.0.1.1-SFgSjHghMpmtldodVoTMs10Z5tcYSUTYSpNgw.hDuq6x6t_PONcb34pY3mXeI5qigrLDLyJKVmxtmM6JXzBYgQ; path=/; expires=Tue, 21-May-24 16:41:56 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8875d85b9ff5acb2-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account_number\": null,\n    \"account_type\": null,\n    \"acknowledgements_count\": 0,\n    \"adjustment_amount\": null,\n    \"application_fee_amount\": null,\n    \"applied_application_fee_percent\": null,\n    \"applied_flex_rate_percent\": null,\n    \"applied_fot_percent\": null,\n    \"applied_processor_fee_percent\": null,\n    \"applied_raw_processor_fee_flat\": null,\n    \"billing_address1\": \"{{$randomStreetAddress}}\",\n    \"billing_address2\": \"\",\n    \"billing_city\": \"{{$randomCity}}\",\n    \"billing_country\": \"US\",\n    \"billing_first_name\": \"{{$randomFirstName}}\",\n    \"billing_last_name\": \"{{$randomLastName}}\",\n    \"billing_postal_code\": \"53706\",\n    \"billing_state\": \"WI\",\n    \"browser_info\": null,\n    \"campaign_id\": 529086,\n    \"card_expiration\": null,\n    \"card_last_four\": null,\n    \"card_type\": null,\n    \"charged_at\": null,\n    \"charged_classy_fees_amount\": null,\n    \"charged_currency_code\": null,\n    \"charged_fees_amount\": null,\n    \"charged_pp_fees_amount\": null,\n    \"charged_total_gross_amount\": null,\n    \"classy_fees_amount\": 0,\n    \"comment\": null,\n    \"company_name\": null,\n    \"context\": {\n        \"is_passport\": false,\n        \"source_campaign_id\": 529086,\n        \"source_campaign_type\": \"peer_to_peer\",\n        \"application_fee_campaign_category\": null,\n        \"commerce_order_id\": null,\n        \"commerce_confirmation_id\": null,\n        \"created_by\": \"Demo Api App\"\n    },\n    \"created_at\": \"2024-05-22T00:00:00+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": 221255,\n    \"donation_gross_amount\": 45.5,\n    \"donation_net_amount\": 45.5,\n    \"fee_on_top\": false,\n    \"fees_amount\": 0,\n    \"flex_rate_amount\": null,\n    \"frequency\": \"one-time\",\n    \"fundraising_page_id\": null,\n    \"fundraising_team_id\": null,\n    \"hide_amount\": false,\n    \"id\": 8039731,\n    \"in_honor_of\": null,\n    \"initial_gross_amount\": 42.2,\n    \"institution\": null,\n    \"is_anonymous\": false,\n    \"is_donor_covered_fee\": false,\n    \"is_gift_aid\": false,\n    \"is_reprocess\": null,\n    \"member_country\": null,\n    \"member_email_address\": \"agh8dka@j8ghjkl.com\",\n    \"member_id\": 4617273,\n    \"member_name\": \"Jake Lastname\",\n    \"member_phone\": \"14567891234\",\n    \"metadata\": null,\n    \"opted_into_payment_sync\": false,\n    \"organization_id\": 56756,\n    \"overhead_net_amount\": 0,\n    \"parent_transaction_id\": null,\n    \"payment_gateway\": null,\n    \"payment_method\": \"Offline\",\n    \"payment_source\": null,\n    \"payment_type\": null,\n    \"pp_fees_amount\": 0,\n    \"pp_reference_id\": null,\n    \"pp_response\": null,\n    \"pp_transaction_id\": null,\n    \"processor_decline_code\": null,\n    \"processor_fee_amount\": null,\n    \"promo_code_code\": null,\n    \"purchased_at\": \"2024-05-22T18:57:01+0000\",\n    \"raw_adjustment_amount\": 0,\n    \"raw_application_fee_amount\": null,\n    \"raw_currency_code\": \"USD\",\n    \"raw_donation_gross_amount\": 42.2,\n    \"raw_flex_rate_amount\": null,\n    \"raw_initial_gross_amount\": 42.2,\n    \"raw_overhead_net_amount\": 0,\n    \"raw_processor_fee_amount\": null,\n    \"raw_total_gross_amount\": 42.2,\n    \"recurring_donation_plan_id\": null,\n    \"refunded_at\": null,\n    \"reprocess_attempts\": 0,\n    \"status\": \"success\",\n    \"supporter_id\": 4106879,\n    \"tax_entity_id\": null,\n    \"total_gross_amount\": 42.2,\n    \"updated_at\": \"2024-05-22T18:57:01+0000\"\n}"
+						},
+						{
+							"name": "Offline Transaction Forbidden",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{requestBody}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/{{version}}/campaigns/526165/transactions",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"{{version}}",
+										"campaigns",
+										"526165",
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 21 May 2024 16:11:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=55"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "57"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "__cf_bm=IKwcwBcVJu.4BdadjARd0htiZHhb5dPjWe1JhYwap_k-1716307916-1.0.1.1-SFgSjHghMpmtldodVoTMs10Z5tcYSUTYSpNgw.hDuq6x6t_PONcb34pY3mXeI5qigrLDLyJKVmxtmM6JXzBYgQ; path=/; expires=Tue, 21-May-24 16:41:56 GMT; domain=.classy-test.org; HttpOnly; Secure; SameSite=None"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "8875d85b9ff5acb2-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"This action is unauthorized.\",\n    \"permissions\": [\n        {\n            \"action\": \"create_transaction_offline\",\n            \"entity\": \"campaign\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains post requests meant to map fields from our provided json and csv sample transaction files. In order to test out running the collection simply \"View More Actions (...)\" on the Bulk Offline Donations parent folder, and select \"Run collection\". In the run order section select either the \"Offline Transaction CSV\" or \"Offline Transaction JSON\" request, and then use either the supplied json or csv file to see how postman turns this input data into api requests.\n\nThe csv mapping here provides a simple way to structure requests for similarly shaped request bodies. In this case all of the requests have a single associated transaction item, and mostly contain the same parameters (address, name, etc.).\n\nThe json mapping allows for much more variation in request bodies, and showcases a slightly more complex example of syncing multiple offline transactions that may have different numbers of associated transaction items, or have more variation in included input parameters. It is worth noting the short pre-request script this request makes use of. ``pm.variables.set(`requestBody`, JSON.stringify(pm.iterationData.toObject()))   ``This line simply maps the json object in the array into the request body field the request is expecting.\n\nFor full documentation on this endpoint's required and allowed fields, see [https://docs.classy.org/#tag/Transaction/operation/createCampaignTransaction](https://docs.classy.org/#tag/Transaction/operation/createCampaignTransaction)"
+		}
+	]
+}
