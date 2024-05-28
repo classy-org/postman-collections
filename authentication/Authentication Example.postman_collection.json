@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "31bbf62d-7682-447f-8101-c97fb462fe04",
+		"name": "Authentication Example",
+		"description": "# Purpose\n\nThe Classy API offers extensive functionality when trying to fetch data. This collection offers a starting point to view how credentials are exchanged for an access token that unlocks access to the rest of our public API.\n\n# How Do I Use This?\n\nIf you don't have experience with Postman, please take a look at their Getting Started documentation! [https://learning.postman.com/docs/getting-started/overview/](https://learning.postman.com/docs/getting-started/overview/)\n\nThis collection is meant to be a playground, allowing you to use a Mock Server as a visual aid to understand how our authentication process works. Our other public collections include this authentication endpoint and set the access token returned from a succesful request as a bearer token in the Authorization header for subsequent requests to other endpoints. You'll need to follow steps to get API credentials through Classy Manager: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\n## Using the Mock Server\n\nIf you either don't have Classy credentials, or would prefer to not make these calls against your account, you can leverage a Mock Server we've put together as part of this collection. The mock server bases its responses on the Examples we've provided under each request, using a mixture of hard-coded data and faked data to mimic executing requests against the API. You can use this mock server to freely try out these requests. It doesn't perform any authentication, and functions outside the context of Postman. So you can try out these calls against the mock server using cURL, or the language of your choice, to try it out! To use the mock server, ensure you are using the Authentication Mock Server environment!\n\n## Using the Classy API\n\nIf you are using your Classy Account, ensure you have your Client ID and Client Secret from Classy Manager. If you don't have these or don't know how to get them, you can find that information from this support article: [https://support.classy.org/s/article/intro-to-the-classy-api](https://support.classy.org/s/article/intro-to-the-classy-api)\n\nOnce you have these, ensure you are using the Classy API environment, and enter the Client ID and Client Secret into the 'current value' field for client_id and client_secret respectively.\n\nAssuming you have working credentials, our auth endpoint will provide a token that can be used to make requests to our other API endpoints. It should be added to the Authentication header as a bearer token by concatenating the word \"Bearer\" with the access token returned in the auth step.\n\nThe response object also includes an expires at property that is a numerical value displaying the seconds until the token expires. This can be used to help build out logic in your application to identify when a new token needs to be fetched. Alternatively, if you start seeing errors that you have an invalid token, simply run the App Auth request again to get a new token.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19007183",
+		"_collection_link": "https://classy-engineering.postman.co/workspace/Public-API---Examples~73fad294-6c98-4434-9e18-9a0fc1c1b7f3/collection/19007183-31bbf62d-7682-447f-8101-c97fb462fe04?action=share&source=collection_link&creator=19007183"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "App Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json()",
+									"const requestData = JSON.parse(pm.request.body)",
+									"",
+									"if (!requestData.client_id || !requestData.client_id.length) {",
+									"    pm.test(\"Fails without client_id\", () => {",
+									"        pm.response.to.have.status(400)",
+									"    })",
+									"}",
+									"",
+									"if (!requestData.client_secret || !requestData.client_secret.length) {",
+									"    pm.test(\"Fails without client_secret\", () => {",
+									"        pm.response.to.have.status(400)",
+									"    })",
+									"}",
+									"",
+									"if (requestData.client_secret && requestData.client_id) {",
+									"    if (requestData.client_secret.length && requestData.client_id.length) {",
+									"        pm.test(\"Response body has access_token\", () => {",
+									"            pm.response.to.have.status(200)",
+									"            pm.expect(responseData).to.have.property(\"access_token\")",
+									"        })",
+									"    }",
+									"}",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", () => {",
+									"    pm.expect(pm.response.responseTime < 1000);",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
+						},
+						"url": {
+							"raw": "{{url}}/oauth2/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth2",
+								"auth"
+							]
+						},
+						"description": "\n### POST /oauth2/auth\n\nThis endpoint is used to authenticate and obtain an access token.\n\n#### Request Body\n- `client_id` (string): The client ID for authentication.\n- `client_secret` (string): The client secret for authentication.\n- `grant_type` (string): The type of grant being requested.\n\n#### Response\nThe response is a JSON object with the following properties:\n- `access_token` (string): The access token obtained after successful authentication.\n- `expires_in` (number): The duration in seconds for which the access token is valid.\n- `queries_log` (array): An array of log entries for the queries made during the authentication process.\n- `token_type` (string): The type of token being returned.\n\n#### Example Response\n```json\n{\n    \"access_token\": \"\",\n    \"expires_in\": 0,\n    \"queries_log\": [],\n    \"token_type\": \"\"\n}\n```\n\n#### JSON Schema\n```json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"access_token\": {\"type\": \"string\"},\n        \"expires_in\": {\"type\": \"number\"},\n        \"queries_log\": {\"type\": \"array\"},\n        \"token_type\": {\"type\": \"string\"}\n    }\n}\n"
+					},
+					"response": [
+						{
+							"name": "success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/oauth2/auth",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 15 May 2024 21:23:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-kong-limit",
+									"value": "time-consumed=61"
+								},
+								{
+									"key": "x-frame-options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-kong-upstream-latency",
+									"value": "64"
+								},
+								{
+									"key": "x-kong-proxy-latency",
+									"value": "0"
+								},
+								{
+									"key": "via",
+									"value": "kong/3.2.2"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "884631041fe16368-ORD"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"{{$randomPassword}}\",\n    \"expires_in\": 7200,\n    \"queries_log\": [],\n    \"token_type\": \"bearer\"\n}"
+						},
+						{
+							"name": "missing client_id",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/oauth2/auth",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": {\n        \"client_id\": [\n            \"The client id field is required.\"\n        ]\n    },\n    \"queries_log\": []\n}"
+						},
+						{
+							"name": "missing client_secret",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/oauth2/auth",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"oauth2",
+										"auth"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": {\n        \"secret_key\": [\n            \"The secret key field is required when client secret is not present.\"\n        ],\n        \"client_secret\": [\n            \"The client secret field is required when secret key is not present.\"\n        ]\n    },\n    \"queries_log\": []\n}"
+						}
+					]
+				}
+			],
+			"description": "This folder contains any requests that authenticate your credentials with the Classy API. Ensure you run this request to get a valid token before attempting to run other requests in this collection.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
