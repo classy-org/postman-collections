@@ -52,9 +52,9 @@
 							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
 						},
 						"url": {
-							"raw": "{{baseUrl}}/oauth2/auth",
+							"raw": "{{url}}/oauth2/auth",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"oauth2",
@@ -79,9 +79,9 @@
 									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
 								},
 								"url": {
-									"raw": "{{baseUrl}}/oauth2/auth",
+									"raw": "{{url}}/oauth2/auth",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"oauth2",
@@ -212,9 +212,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+							"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=items",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -229,7 +229,7 @@
 								}
 							]
 						},
-						"description": "### Get Transaction with related items\n\nThis endpoint retrieves a specific transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+						"description": "### Get Transaction with related items\n\nThis endpoint retrieves a specific transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions/{{transaction_id}}?with=items`"
 					},
 					"response": [
 						{
@@ -238,9 +238,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -354,9 +354,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -470,9 +470,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -582,9 +582,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -723,9 +723,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+							"raw": "{{url}}/{{version}}/transactions?with=items",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -739,7 +739,7 @@
 								}
 							]
 						},
-						"description": "### Get Transactions List with related items\n\nThis endpoint retrieves a list of transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions?with=items`"
+						"description": "### Get Transactions List with related items\n\nThis endpoint retrieves a list of transaction along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions?with=items`"
 					},
 					"response": [
 						{
@@ -748,9 +748,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -863,9 +863,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -978,9 +978,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1118,9 +1118,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+							"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -1136,7 +1136,7 @@
 								}
 							]
 						},
-						"description": "### Get Organization Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to the organization along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+						"description": "### Get Organization Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to the organization along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions/{{transaction_id}}?with=items`"
 					},
 					"response": [
 						{
@@ -1145,9 +1145,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1262,9 +1262,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1379,9 +1379,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1521,9 +1521,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+							"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -1539,7 +1539,7 @@
 								}
 							]
 						},
-						"description": "### Get Campaign Transaction with related items\n\nThis endpoint retrieves a list of transactions belonging to a campaign along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+						"description": "### Get Campaign Transaction with related items\n\nThis endpoint retrieves a list of transactions belonging to a campaign along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions/{{transaction_id}}?with=items`"
 					},
 					"response": [
 						{
@@ -1548,9 +1548,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1665,9 +1665,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1782,9 +1782,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1924,9 +1924,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+							"raw": "{{url}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -1942,7 +1942,7 @@
 								}
 							]
 						},
-						"description": "### Get Recurring Donation Plan Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to a recurring donation plan along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=items`"
+						"description": "### Get Recurring Donation Plan Transactions with related items\n\nThis endpoint retrieves a list of transactions belonging to a recurring donation plan along with its items.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions/{{transaction_id}}?with=items`"
 					},
 					"response": [
 						{
@@ -1951,9 +1951,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2068,9 +2068,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2185,9 +2185,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
+									"raw": "{{url}}/{{version}}/recurring-donation-plans/{{recurring_donation_plan_id}}/transactions?with=items",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
