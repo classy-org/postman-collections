@@ -18,21 +18,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var data = JSON.parse(responseBody);",
-									" ",
-									"if (data.access_token) {",
-									"  tests[\"Body has token\"] = true;",
-									"  postman.setEnvironmentVariable(\"access_token\", data.access_token);",
-									"}",
-									"else {",
-									"  tests[\"Body has token\"] = false;",
-									"}",
-									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
 									"",
 									"",
-									"tests[\"Response time is less than 1000ms\"] = responseTime < 1000;",
-									""
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"pm.test(\"Access token is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.access_token).to.exist.and.to.be.a('string');",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -52,9 +52,9 @@
 							"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
 						},
 						"url": {
-							"raw": "{{baseUrl}}/oauth2/auth",
+							"raw": "{{url}}/oauth2/auth",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"oauth2",
@@ -79,9 +79,9 @@
 									"raw": "{\n    \"client_id\":     \"{{client_id}}\",\n    \"client_secret\": \"{{client_secret}}\",\n    \"grant_type\":    \"client_credentials\"\n}\n    \n "
 								},
 								"url": {
-									"raw": "{{baseUrl}}/oauth2/auth",
+									"raw": "{{url}}/oauth2/auth",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"oauth2",
@@ -203,11 +203,16 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+							"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -222,7 +227,7 @@
 								}
 							]
 						},
-						"description": "### Get Transaction with Source Tracking Codes\n\nThis endpoint retrieves a specific transaction along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"acknowledgements_count\": 0,\n    \"adjustment_amount\": 0,\n    \"applied_fot_percent\": \"\",\n    \"billing_address1\": \"\",\n    \"billing_address2\": \"\",\n    \"billing_city\": \"\",\n    \"billing_country\": \"\",\n    \"billing_first_name\": \"\",\n    \"billing_last_name\": \"\",\n    \"billing_postal_code\": \"\",\n    \"billing_state\": \"\",\n    \"browser_info\": \"\",\n    \"campaign_id\": 0,\n    \"source_tracking_codes\": [\n        {\n            \"id\": 0,\n            \"c_src\": \"\",\n            \"c_src2\": \"\",\n            \"referrer\": \"\",\n            \"trackable_id\": 0,\n            \"trackable_type\": \"\",\n            \"event_type\": \"\",\n            \"created_at\": \"\",\n            \"updated_at\": \"\"\n        }\n    ],\n    ...\n}\n\n ```"
+						"description": "### Get Transaction with Source Tracking Codes\n\nThis endpoint retrieves a specific transaction along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"acknowledgements_count\": 0,\n    \"adjustment_amount\": 0,\n    \"applied_fot_percent\": \"\",\n    \"billing_address1\": \"\",\n    \"billing_address2\": \"\",\n    \"billing_city\": \"\",\n    \"billing_country\": \"\",\n    \"billing_first_name\": \"\",\n    \"billing_last_name\": \"\",\n    \"billing_postal_code\": \"\",\n    \"billing_state\": \"\",\n    \"browser_info\": \"\",\n    \"campaign_id\": 0,\n    \"source_tracking_codes\": [\n        {\n            \"id\": 0,\n            \"c_src\": \"\",\n            \"c_src2\": \"\",\n            \"referrer\": \"\",\n            \"trackable_id\": 0,\n            \"trackable_type\": \"\",\n            \"event_type\": \"\",\n            \"created_at\": \"\",\n            \"updated_at\": \"\"\n        }\n    ],\n    ...\n}\n\n ```"
 					},
 					"response": [
 						{
@@ -231,9 +236,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -347,9 +352,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -463,9 +468,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -575,9 +580,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/transactions/{{transaction_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -717,9 +722,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+							"raw": "{{url}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -734,7 +739,7 @@
 								}
 							]
 						},
-						"description": "### Get Fundraising Team with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising team along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{baseUrl}}/{{version}}/fundraising_teams/{{fundraising_team_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"campaign_id\": {\"type\": \"integer\"},\n        \"canonical_url\": {\"type\": \"string\"},\n        \"city\": {\"type\": \"string\"},\n        \"country\": {\"type\": \"string\"},\n        \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"cover_photo_url\": {\"type\": [\"string\", \"null\"]},\n        \"created_at\": {\"type\": \"string\"},\n        \"currency_code\": {\"type\": \"string\"},\n        \"description\": {\"type\": \"string\"},\n        \"designation_id\": {\"type\": \"integer\"},\n        \"goal\": {\"type\": \"integer\"},\n        \"id\": {\"type\": \"integer\"},\n        \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"logo_url\": {\"type\": [\"string\", \"null\"]},\n        \"name\": {\"type\": \"string\"},\n        \"organization_id\": {\"type\": \"integer\"},\n        \"parent_id\": {\"type\": [\"integer\", \"null\"]},\n        \"postal_code\": {\"type\": [\"string\", \"null\"]},\n        \"raw_currency_code\": {\"type\": \"string\"},\n        \"raw_goal\": {\"type\": \"string\"},\n        \"root_id\": {\"type\": [\"integer\", \"null\"]},\n        \"source_tracking_codes\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"c_src\": {\"type\": \"string\"},\n                    \"c_src2\": {\"type\": \"string\"},\n                    \"referrer\": {\"type\": \"string\"},\n                    \"trackable_id\": {\"type\": \"integer\"},\n                    \"trackable_type\": {\"type\": \"string\"},\n                    \"event_type\": {\"type\": \"string\"},\n                    \"created_at\": {\"type\": \"string\"},\n                    \"updated_at\": {\"type\": \"string\"}\n                }\n            }\n        },\n        \"state\": {\"type\": \"string\"},\n        \"status\": {\"type\": \"string\"},\n        \"team_lead_id\": {\"type\": \"integer\"},\n        \"team_lead_supporter_id\": {\"type\": \"integer\"},\n        \"team_policy_id\": {\"type\": \"integer\"},\n        \"thank_you_text\": {\"type\": [\"string\", \"null\"]},\n        \"updated_at\": {\"type\": \"string\"}\n    }\n}\n\n ```"
+						"description": "### Get Fundraising Team with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising team along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n    \n- URL: `{{url}}/{{version}}/fundraising_teams/{{fundraising_team_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"campaign_id\": {\"type\": \"integer\"},\n        \"canonical_url\": {\"type\": \"string\"},\n        \"city\": {\"type\": \"string\"},\n        \"country\": {\"type\": \"string\"},\n        \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"cover_photo_url\": {\"type\": [\"string\", \"null\"]},\n        \"created_at\": {\"type\": \"string\"},\n        \"currency_code\": {\"type\": \"string\"},\n        \"description\": {\"type\": \"string\"},\n        \"designation_id\": {\"type\": \"integer\"},\n        \"goal\": {\"type\": \"integer\"},\n        \"id\": {\"type\": \"integer\"},\n        \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n        \"logo_url\": {\"type\": [\"string\", \"null\"]},\n        \"name\": {\"type\": \"string\"},\n        \"organization_id\": {\"type\": \"integer\"},\n        \"parent_id\": {\"type\": [\"integer\", \"null\"]},\n        \"postal_code\": {\"type\": [\"string\", \"null\"]},\n        \"raw_currency_code\": {\"type\": \"string\"},\n        \"raw_goal\": {\"type\": \"string\"},\n        \"root_id\": {\"type\": [\"integer\", \"null\"]},\n        \"source_tracking_codes\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"c_src\": {\"type\": \"string\"},\n                    \"c_src2\": {\"type\": \"string\"},\n                    \"referrer\": {\"type\": \"string\"},\n                    \"trackable_id\": {\"type\": \"integer\"},\n                    \"trackable_type\": {\"type\": \"string\"},\n                    \"event_type\": {\"type\": \"string\"},\n                    \"created_at\": {\"type\": \"string\"},\n                    \"updated_at\": {\"type\": \"string\"}\n                }\n            }\n        },\n        \"state\": {\"type\": \"string\"},\n        \"status\": {\"type\": \"string\"},\n        \"team_lead_id\": {\"type\": \"integer\"},\n        \"team_lead_supporter_id\": {\"type\": \"integer\"},\n        \"team_policy_id\": {\"type\": \"integer\"},\n        \"thank_you_text\": {\"type\": [\"string\", \"null\"]},\n        \"updated_at\": {\"type\": \"string\"}\n    }\n}\n\n ```"
 					},
 					"response": [
 						{
@@ -748,9 +753,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -852,7 +857,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{baseUrl}}/team/{{$pathSegments '2'}}\",\n    \"city\": \"San Diego\",\n    \"country\": \"US\",\n    \"cover_photo_id\": null,\n    \"cover_photo_url\": null,\n    \"created_at\": \"2024-05-15T16:44:19+0000\",\n    \"currency_code\": \"USD\",\n    \"description\": \"{{$randomCatchPhrase}}\",\n    \"designation_id\": {{$randomInt}},\n    \"goal\": 1000,\n    \"id\": {{$pathSegments '2'}},\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"name\": \"{{$randomBsBuzz}}\",\n    \"organization_id\": {{$randomInt}},\n    \"parent_id\": null,\n    \"postal_code\": null,\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"1000.000\",\n    \"root_id\": null,\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:20+0000\",\n            \"updated_at\": \"2024-05-15T16:44:20+0000\"\n        }\n    ],\n    \"state\": \"CA\",\n    \"status\": \"active\",\n    \"team_lead_id\": {{$randomInt}},\n    \"team_lead_supporter_id\": {{$randomInt}},\n    \"team_policy_id\": {{$randomInt}},\n    \"thank_you_text\": null,\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
+							"body": "{\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{url}}/team/{{$pathSegments '2'}}\",\n    \"city\": \"San Diego\",\n    \"country\": \"US\",\n    \"cover_photo_id\": null,\n    \"cover_photo_url\": null,\n    \"created_at\": \"2024-05-15T16:44:19+0000\",\n    \"currency_code\": \"USD\",\n    \"description\": \"{{$randomCatchPhrase}}\",\n    \"designation_id\": {{$randomInt}},\n    \"goal\": 1000,\n    \"id\": {{$pathSegments '2'}},\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"name\": \"{{$randomBsBuzz}}\",\n    \"organization_id\": {{$randomInt}},\n    \"parent_id\": null,\n    \"postal_code\": null,\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"1000.000\",\n    \"root_id\": null,\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:20+0000\",\n            \"updated_at\": \"2024-05-15T16:44:20+0000\"\n        }\n    ],\n    \"state\": \"CA\",\n    \"status\": \"active\",\n    \"team_lead_id\": {{$randomInt}},\n    \"team_lead_supporter_id\": {{$randomInt}},\n    \"team_policy_id\": {{$randomInt}},\n    \"thank_you_text\": null,\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
 						},
 						{
 							"name": "Error - Unauthorized",
@@ -860,9 +865,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -976,9 +981,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1088,9 +1093,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-teams/{{fundraising_team_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1233,9 +1238,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+							"raw": "{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -1250,7 +1255,7 @@
 								}
 							]
 						},
-						"description": "### Get Fundraising Page with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising page along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"alias\": {\"type\": \"string\"},\n    \"campaign_id\": {\"type\": \"integer\"},\n    \"canonical_url\": {\"type\": \"string\"},\n    \"commitment_id\": {\"type\": [\"integer\", \"null\"]},\n    \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"created_at\": {\"type\": \"string\"},\n    \"currency_code\": {\"type\": \"string\"},\n    \"designation_id\": {\"type\": \"integer\"},\n    \"ended_at\": {\"type\": \"string\"},\n    \"fundraising_team_id\": {\"type\": \"integer\"},\n    \"goal\": {\"type\": \"integer\"},\n    \"id\": {\"type\": \"integer\"},\n    \"intro_text\": {\"type\": \"string\"},\n    \"is_tribute\": {\"type\": [\"boolean\", \"null\"]},\n    \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"logo_url\": {\"type\": [\"string\", \"null\"]},\n    \"member_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"member_id\": {\"type\": \"integer\"},\n    \"organization_id\": {\"type\": \"integer\"},\n    \"raw_currency_code\": {\"type\": \"string\"},\n    \"raw_goal\": {\"type\": \"string\"},\n    \"source_tracking_codes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\"type\": \"integer\"},\n          \"c_src\": {\"type\": \"string\"},\n          \"c_src2\": {\"type\": \"string\"},\n          \"referrer\": {\"type\": \"string\"},\n          \"trackable_id\": {\"type\": \"integer\"},\n          \"trackable_type\": {\"type\": \"string\"},\n          \"event_type\": {\"type\": \"string\"},\n          \"created_at\": {\"type\": \"string\"},\n          \"updated_at\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"started_at\": {\"type\": \"string\"},\n    \"status\": {\"type\": \"string\"},\n    \"supporter_id\": {\"type\": \"integer\"},\n    \"team_role\": {\"type\": \"string\"},\n    \"thank_you_text\": {\"type\": \"string\"},\n    \"thankyou_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"title\": {\"type\": \"string\"},\n    \"updated_at\": {\"type\": \"string\"}\n  }\n}\n\n ```"
+						"description": "### Get Fundraising Page with Source Tracking Codes\n\nThis endpoint retrieves a specific fundraising page along with its source tracking codes.\n\n#### Request\n\n- Method: GET\n- URL: `{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes`\n    \n\n#### Response\n\nBelow is an example of the JSON response from this endpoint. For the most up to date reference of this, please refer to the documentation at [docs.classy.org](https://docs.classy.org)\n\n#### Example\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"alias\": {\"type\": \"string\"},\n    \"campaign_id\": {\"type\": \"integer\"},\n    \"canonical_url\": {\"type\": \"string\"},\n    \"commitment_id\": {\"type\": [\"integer\", \"null\"]},\n    \"cover_photo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"created_at\": {\"type\": \"string\"},\n    \"currency_code\": {\"type\": \"string\"},\n    \"designation_id\": {\"type\": \"integer\"},\n    \"ended_at\": {\"type\": \"string\"},\n    \"fundraising_team_id\": {\"type\": \"integer\"},\n    \"goal\": {\"type\": \"integer\"},\n    \"id\": {\"type\": \"integer\"},\n    \"intro_text\": {\"type\": \"string\"},\n    \"is_tribute\": {\"type\": [\"boolean\", \"null\"]},\n    \"logo_id\": {\"type\": [\"integer\", \"null\"]},\n    \"logo_url\": {\"type\": [\"string\", \"null\"]},\n    \"member_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"member_id\": {\"type\": \"integer\"},\n    \"organization_id\": {\"type\": \"integer\"},\n    \"raw_currency_code\": {\"type\": \"string\"},\n    \"raw_goal\": {\"type\": \"string\"},\n    \"source_tracking_codes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\"type\": \"integer\"},\n          \"c_src\": {\"type\": \"string\"},\n          \"c_src2\": {\"type\": \"string\"},\n          \"referrer\": {\"type\": \"string\"},\n          \"trackable_id\": {\"type\": \"integer\"},\n          \"trackable_type\": {\"type\": \"string\"},\n          \"event_type\": {\"type\": \"string\"},\n          \"created_at\": {\"type\": \"string\"},\n          \"updated_at\": {\"type\": \"string\"}\n        }\n      }\n    },\n    \"started_at\": {\"type\": \"string\"},\n    \"status\": {\"type\": \"string\"},\n    \"supporter_id\": {\"type\": \"integer\"},\n    \"team_role\": {\"type\": \"string\"},\n    \"thank_you_text\": {\"type\": \"string\"},\n    \"thankyou_email_text\": {\"type\": [\"string\", \"null\"]},\n    \"title\": {\"type\": \"string\"},\n    \"updated_at\": {\"type\": \"string\"}\n  }\n}\n\n ```"
 					},
 					"response": [
 						{
@@ -1264,9 +1269,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1372,7 +1377,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"alias\": \"{{$randomCatchPhrase}}\",\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{baseUrl}}/fundraiser/{{$pathSegments '2'}}\",\n    \"commitment_id\": null,\n    \"cover_photo_id\": null,\n    \"created_at\": \"2024-05-15T16:44:30+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": {{$randomInt}},\n    \"ended_at\": \"2024-06-04T23:00:00+0000\",\n    \"fundraising_team_id\": {{$randomInt}},\n    \"goal\": 500,\n    \"id\": {{$pathSegments '2'}},\n    \"intro_text\": \"{{$randomPhrase}}\",\n    \"is_tribute\": null,\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"member_email_text\": null,\n    \"member_id\": {{$randomInt}},\n    \"organization_id\": {{$randomInt}},\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"500.000\",\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:30+0000\",\n            \"updated_at\": \"2024-05-15T16:44:30+0000\"\n        }\n    ],\n    \"started_at\": \"2024-05-15T16:44:30+0000\",\n    \"status\": \"active\",\n    \"supporter_id\": {{$randomInt}},\n    \"team_role\": \"primary-captain\",\n    \"thank_you_text\": \"{{$randomPhrase}}\",\n    \"thankyou_email_text\": null,\n    \"title\": \"{{$randomCatchPhrase}}\",\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
+							"body": "{\n    \"alias\": \"{{$randomCatchPhrase}}\",\n    \"campaign_id\": {{$randomInt}},\n    \"canonical_url\": \"{{url}}/fundraiser/{{$pathSegments '2'}}\",\n    \"commitment_id\": null,\n    \"cover_photo_id\": null,\n    \"created_at\": \"2024-05-15T16:44:30+0000\",\n    \"currency_code\": \"USD\",\n    \"designation_id\": {{$randomInt}},\n    \"ended_at\": \"2024-06-04T23:00:00+0000\",\n    \"fundraising_team_id\": {{$randomInt}},\n    \"goal\": 500,\n    \"id\": {{$pathSegments '2'}},\n    \"intro_text\": \"{{$randomPhrase}}\",\n    \"is_tribute\": null,\n    \"logo_id\": null,\n    \"logo_url\": null,\n    \"member_email_text\": null,\n    \"member_id\": {{$randomInt}},\n    \"organization_id\": {{$randomInt}},\n    \"raw_currency_code\": \"USD\",\n    \"raw_goal\": \"500.000\",\n    \"source_tracking_codes\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$pathSegments '2'}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-05-15T16:44:30+0000\",\n            \"updated_at\": \"2024-05-15T16:44:30+0000\"\n        }\n    ],\n    \"started_at\": \"2024-05-15T16:44:30+0000\",\n    \"status\": \"active\",\n    \"supporter_id\": {{$randomInt}},\n    \"team_role\": \"primary-captain\",\n    \"thank_you_text\": \"{{$randomPhrase}}\",\n    \"thankyou_email_text\": null,\n    \"title\": \"{{$randomCatchPhrase}}\",\n    \"updated_at\": \"2024-05-15T16:44:30+0000\"\n}"
 						},
 						{
 							"name": "Error - Unauthorized",
@@ -1380,9 +1385,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1496,9 +1501,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1608,9 +1613,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
+									"raw": "{{url}}/{{version}}/fundraising-pages/{{fundraising_page_id}}?with=source_tracking_codes",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1760,9 +1765,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+							"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -1802,9 +1807,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1842,7 +1847,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - Fundraising Team",
@@ -1855,9 +1860,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1895,7 +1900,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - Fundraising Page",
@@ -1908,9 +1913,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -1948,7 +1953,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - All Options Set",
@@ -1961,9 +1966,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2001,7 +2006,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": \"{{$randomBsNoun}}\",\n            \"c_src2\": \"{{$randomBsNoun}}\",\n            \"referrer\": \"{{$randomUrl}}\",\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - No Options Set",
@@ -2014,9 +2019,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2054,7 +2059,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/campaigns/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Error - Invalid or Expired Token",
@@ -2067,9 +2072,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2179,9 +2184,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2307,9 +2312,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/campaigns/{{campaign_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2463,9 +2468,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+							"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
 							"host": [
-								"{{baseUrl}}"
+								"{{url}}"
 							],
 							"path": [
 								"{{version}}",
@@ -2501,21 +2506,18 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer •••••••"
+										"value": "Bearer {{access_token}}"
 									}
 								],
 								"url": {
-									"raw": "https://api.classy.org/2.0/organizations//source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
-									"protocol": "https",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=true",
 									"host": [
-										"api",
-										"classy",
-										"org"
+										"{{url}}"
 									],
 									"path": [
-										"2.0",
+										"{{version}}",
 										"organizations",
-										"",
+										"{{organization_id}}",
 										"source-tracking-codes"
 									],
 									"query": [
@@ -2548,7 +2550,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - Fundraising Team",
@@ -2561,9 +2563,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2601,7 +2603,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - Fundraising Page",
@@ -2614,9 +2616,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=true&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2654,7 +2656,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - All Options Set",
@@ -2667,9 +2669,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=true&transactions=true",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2707,7 +2709,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_page\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"fundraising_team\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        },\n        {\n            \"id\": {{$randomInt}},\n            \"c_src\": {{$randomBsNoun}},\n            \"c_src2\": {{$randomBsNoun}},\n            \"referrer\": {{$randomUrl}},\n            \"trackable_id\": {{$randomInt}},\n            \"trackable_type\": \"transaction\",\n            \"event_type\": \"create\",\n            \"created_at\": \"2024-01-01T12:02:01+0000\",\n            \"updated_at\": \"2024-01-01T12:02:01+0000\"\n        }\n    ],\n    \"first_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Success - No Options Set",
@@ -2720,9 +2722,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=false&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2760,7 +2762,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{baseUrl}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [],\n    \"first_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"{{url}}/{{version}}/organizations/{{$pathSegments '2'}}/source-tracking-codes\",\n    \"per_page\": 20,\n    \"prev_page_url\": null,\n    \"to\": 1,\n    \"total\": 1\n}"
 						},
 						{
 							"name": "Error - Invalid or Expired Token",
@@ -2773,9 +2775,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -2885,9 +2887,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
@@ -3013,9 +3015,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
+									"raw": "{{url}}/{{version}}/organizations/{{organization_id}}/source-tracking-codes?fundraisingTeams=true&fundraisingPages=false&transactions=false",
 									"host": [
-										"{{baseUrl}}"
+										"{{url}}"
 									],
 									"path": [
 										"{{version}}",
