@@ -1,4 +1,4 @@
-# Fetch Multi-Item Order
+# Retrieve Order Items through the Transaction API
 
 ## Purpose
 
