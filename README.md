@@ -1,8 +1,8 @@
-# Classy API Postman Collections
+# GoFundMe Pro API Postman Collections
 
 ## Overview
 
-This repository contains Postman collections that the Classy team has put together to showcase the functionality of the Classy API. To get the most out of this collection, ensure that you have [Postman downloaded](https://www.postman.com/downloads/) and installed.
+This repository contains Postman collections that the GoFundMe Pro team has put together to showcase the functionality of the GoFundMe Pro API. To get the most out of this collection, ensure that you have [Postman downloaded](https://www.postman.com/downloads/) and installed.
 
 ## Importing Collections
 
@@ -12,14 +12,14 @@ To use these collections, you'll need to import them into your own workspace. Yo
 
 Each collection will have one or more environments. These environments contain variables that you'll need to define in the UI. Commonly, those will be:
 
-- **Classy API credentials**, like Client ID and Client Secret
-- **IDs to records** contained in your Classy organization that you will be fetching via Postman
+- **GoFundMe Pro API credentials**, like Client ID and Client Secret
+- **IDs to records** contained in your GoFundMe Pro organization that you will be fetching via Postman
 
 Some environment variables may be used by the collection itself to set values that other requests in the collection need. If in doubt, refer to each collection's documentation or `README` included in the collection's folder for more information.
 
 ## Important Environment Considerations
 
-As you enter the data needed to connect to Classy, please be considerate of how you enter your `client_id` and `client_secret`! **These values should be treated with the same sensitivity as your password!** If someone gets this data that shouldn't have it, they can make any request as though they were you! To protect yourself, ensure that you do the following:
+As you enter the data needed to connect to GoFundMe Pro, please be considerate of how you enter your `client_id` and `client_secret`! **These values should be treated with the same sensitivity as your password!** If someone gets this data that shouldn't have it, they can make any request as though they were you! To protect yourself, ensure that you do the following:
 
 - Whenever you add data to the Postman environment variables, only do it in the `Current Value` column
   - Please review [this Postman documentation](https://learning.postman.com/docs/sending-requests/variables/variables/#initial-and-current-values) to understand the difference between Initial and Current values
