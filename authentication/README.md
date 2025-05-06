@@ -12,7 +12,7 @@ More information on how to use the Mock Server is [further down in this README](
 
 If you don't have experience with Postman, please take a look at their [Getting Started documentation!](https://learning.postman.com/docs/getting-started/overview/)
 
-This collection is meant to be a playground, allowing you to use a Mock Server as a visual aid to understand how our authentication process works. Our other public collections include this authentication endpoint and set the access token returned from a succesful request as a bearer token in the Authorization header for subsequent requests to other endpoints. You'll need to follow the steps to get API credentials through GoFundMe Pro Manager as outlined [here.](https://support.classy.org/s/article/intro-to-the-classy-api)
+This collection is meant to be a playground, allowing you to use a Mock Server as a visual aid to understand how our authentication process works. Our other public collections include this authentication endpoint and set the access token returned from a succesful request as a bearer token in the Authorization header for subsequent requests to other endpoints. You'll need to follow the steps to get API credentials through GoFundMe Pro as outlined [here.](https://support.classy.org/s/article/intro-to-the-classy-api)
 
 For instructions on how to import this collection and environment variables, refer to the README.md file at the root of this repository.
 

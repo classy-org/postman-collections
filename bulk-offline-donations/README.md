@@ -7,7 +7,7 @@ This collection showcases two strategies for using a Postman runner in order to 
 ## How To Use
 
 If you don't have experience with Postman, please take a look at their Getting Started documentation! <https://learning.postman.com/docs/getting-started/overview/>
-This collection is meant to be a playground, allowing you to use either a Mock Server or your own GoFundMe Pro Account. You'll need to follow steps to get API credentials through GoFundMe Pro Manager: <https://support.classy.org/s/article/intro-to-the-classy-api>
+This collection is meant to be a playground, allowing you to use either a Mock Server or your own GoFundMe Pro Account. You'll need to follow steps to get API credentials through GoFundMe Pro: <https://support.classy.org/s/article/intro-to-the-classy-api>
 
 ## Using the Mock Server
 
@@ -15,7 +15,7 @@ If you either don't have GoFundMe Pro credentials, or would prefer to not make t
 
 ## Using the GoFundMe Pro API
 
-If you are using your GoFundMe Pro Account, ensure you have your Client ID and Client Secret from GoFundMe Pro Manager. If you don't have these or don't know how to get them, you can find that information from this support article: <https://support.classy.org/s/article/intro-to-the-classy-api>
+If you are using your GoFundMe Pro Account, ensure you have your Client ID and Client Secret from GoFundMe Pro. If you don't have these or don't know how to get them, you can find that information from this support article: <https://support.classy.org/s/article/intro-to-the-classy-api>
 
 Once you have these, ensure you are using the GoFundMe Pro API environment, and enter the Client ID and Client Secret into the 'current value' field for client_id and client_secret respectively.
 Before making any of the donation requests you'll need to authenticate with the API. To do so, use the App Auth request under the Authentication folder. This will make a call to the API, and assuming you have working credentials will provide a token that will be automatically saved and used for subsequent requests. These tokens have a limited timeframe in which they are valid, so if you start seeing errors that you have an invalid token, simply run the App Auth request again to get a new token.
